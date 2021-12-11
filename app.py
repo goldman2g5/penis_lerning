@@ -17,7 +17,7 @@ class Article(db.Model):
         return "<Article %r" % self.id
 
 
-@app.route('/login/', methods=['post', 'get'])
+@app.route('/', methods=['post', 'get'])
 def login():
     message = ''
     username = request.form.get('username')  # запрос к данным формы
@@ -28,7 +28,7 @@ def login():
     else:
         message = "Wrong username or password"
 
-    return render_template('index.html', message=message)
+    return render_template('aye.html', message=message)
 
 
 @app.route('/user/<string:name>/<int:id>')
