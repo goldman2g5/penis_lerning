@@ -1,21 +1,35 @@
+"""
+Для того чтобы нейросеть работала надо читать эту молитву каждый раз:
+
+Отче наш, иже еси в моем PC
+Да святится имя и расширение Твое
+Да придет прерывание Твое и да будет воля твоя
+BASIC наш насущный дай нам;
+И прости нам дизассемблеры и антивирусы наши,
+как Копиpайты прощаем мы.
+И не введи нас в Exception Error,
+но избавь нас от зависания,
+ибо Твое есть адpессное пространство,
+порты и регистры
+Во имя CTRLа, ALTa и Святого DELa,
+всемогущего RESETa
+во веки веков,
+ENTER.
+
+Раз прочитано
+
+"""
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from tensorflow import keras
-from tensorflow.keras import layers
 from keras import models, layers
-import tqdm
-from PIL import Image
-from sklearn.model_selection import train_test_split
-from sklearn import datasets
-from sklearn import svm
-from sklearn.model_selection import KFold
-import os
-import shutil
-import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import KFold
+from tensorflow import keras
 from tensorflow.keras.utils import to_categorical
 
-path = 'C:/Users/ArtSt/PycharmProjects/shitpost/kaggle/'
+path = 'C:/Users/ArtSt/PycharmProjects/shitpost/kaggle/' # Вот эту херню менять чтобы сеть работала
 data = pd.read_csv(path + 'icml_face_data.csv')
 emotions = {0: 'Angry', 1: 'Disgust', 2: 'Fear', 3: 'Happy', 4: 'Sad', 5: 'Surprise', 6: 'Neutral'}
 classes = dict(zip(range(0, 7), (((data[data[' Usage'] == 'Training']['emotion'].value_counts()).sort_index()) / len(
@@ -29,12 +43,12 @@ print(data)
 
 
 def parse_data(deta):
-    image_array = np.zeros(shape=(len(deta), 48, 48))  # 1
+    image_array = np.zeros(shape=(len(deta), 48, 48))
     image_label = np.array(list(map(int, deta['emotion'])))
 
     for i, row in enumerate(deta.index):
         image = np.fromstring(deta.loc[row, ' pixels'], dtype=int, sep=' ')
-        image = np.reshape(image, (48, 48))  # 1
+        image = np.reshape(image, (48, 48))
         image_array[i] = image
 
     return image_array, image_label
@@ -50,11 +64,13 @@ val_images = val_imgs.reshape((val_imgs.shape[0], 48, 48, 1))
 val_images = val_images.astype('float32') / 255
 test_images = test_imgs.reshape((test_imgs.shape[0], 48, 48, 1))
 test_images = test_images.astype('float32') / 255
+
+
 print("train shape", np.shape(train_imgs))
 print("validation shape", np.shape(val_imgs))
 print("validatio shape", np.shape(val_imgs))
-
 print(train_imgs)
+
 
 model_mlp = keras.Sequential()
 model_mlp.add(layers.Flatten(input_shape=(48, 48, 1)))
@@ -63,6 +79,7 @@ model_mlp.add(layers.Dense(units=84, activation='relu'))
 model_mlp.add(layers.Dense(units=7, activation='softmax'))
 model_mlp.compile(loss=keras.losses.SparseCategoricalCrossentropy(), optimizer=keras.optimizers.Adam(lr=1e-3),
                   metrics=['accuracy'])
+
 model_mlp.summary()
 
 
@@ -74,6 +91,8 @@ model_mlp.fit(train_imgs, train_lbls,
 train_labels = to_categorical(train_lbls)
 val_labels = to_categorical(val_lbls)
 test_labels = to_categorical(test_lbls)
+
+
 model_cnn = models.Sequential()
 model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
 model_cnn.add(layers.MaxPool2D((2, 2)))
@@ -95,12 +114,13 @@ history = model_cnn.fit(train_images, train_labels,
                         epochs=12,
                         batch_size=512)
 
-
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
 loss = history.history['loss']
 val_loss = history.history['val_loss']
 epochs = range(1, len(acc) + 1)
+
+
 plt.plot(epochs, acc, label='Training acc')
 plt.plot(epochs, val_acc, label='Validation acc')
 plt.title('Training and validation accuracy')
@@ -116,13 +136,13 @@ plt.show()
 test_prob = model_cnn.predict(test_images)
 test_pred = np.argmax(test_prob, axis=1)
 test_accuracy = np.mean(test_pred == test_lbls)
-
 print(test_accuracy)
 
 
 conf_mat = confusion_matrix(test_lbls, test_pred)
 pd.DataFrame(conf_mat, columns=emotions.values(), index=emotions.values())
 
+# Код ниже стоит под большим вопросом нужен ли он, просто хуева туча нейросетей
 model_cnn = models.Sequential()
 model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
 model_cnn.add(layers.MaxPool2D((2, 2)))
