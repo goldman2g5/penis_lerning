@@ -16,7 +16,7 @@ BASIC наш насущный дай нам;
 во веки веков,
 ENTER.
 
-Раз прочитано: 1
+Раз прочитано: 3
 
 """
 
@@ -29,7 +29,7 @@ from sklearn.model_selection import KFold
 from tensorflow import keras
 from tensorflow.keras.utils import to_categorical
 
-path = 'C:/Users/ArtSt/PycharmProjects/shitpost/kaggle/' # Вот эту херню менять чтобы сеть работала
+path = './kaggle/'
 data = pd.read_csv(path + 'icml_face_data.csv')
 emotions = {0: 'Angry', 1: 'Disgust', 2: 'Fear', 3: 'Happy', 4: 'Sad', 5: 'Surprise', 6: 'Neutral'}
 classes = dict(zip(range(0, 7), (((data[data[' Usage'] == 'Training']['emotion'].value_counts()).sort_index()) / len(
@@ -141,3 +141,136 @@ print(test_accuracy)
 
 conf_mat = confusion_matrix(test_lbls, test_pred)
 pd.DataFrame(conf_mat, columns=emotions.values(), index=emotions.values())
+
+# Код ниже стоит под большим вопросом нужен ли он, просто хуева туча нейросетей
+
+"""
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='selu'))
+model_cnn.add(layers.Dense(7, activation='softmax'))
+
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='selu'))
+model_cnn.add(layers.Dense(7, activation='sigmoid'))
+
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='elu'))
+model_cnn.add(layers.Dense(7, activation='softmax'))
+
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='elu'))
+model_cnn.add(layers.Dense(7, activation='sigmoid'))
+
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='relu'))
+model_cnn.add(layers.Dense(7, activation='sigmoid'))
+
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='relu'))
+model_cnn.add(layers.Dense(7, activation='sigmoid'))
+
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='relu'))
+model_cnn.add(layers.Dense(7, activation='softmax'))
+
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='relu'))
+model_cnn.add(layers.Dense(7, activation='softmax'))
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='selu'))
+model_cnn.add(layers.Dense(7, activation='sigmoid'))
+
+model_cnn = models.Sequential()
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
+model_cnn.add(layers.MaxPool2D((2, 2)))
+model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
+model_cnn.add(layers.Flatten())
+model_cnn.add(layers.Dense(64, activation='relu'))
+model_cnn.add(layers.Dense(7, activation='sigmoid'))
+
+"""
