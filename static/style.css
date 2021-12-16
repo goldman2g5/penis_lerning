@@ -1,0 +1,19 @@
+
+body{
+    background-image: url(image/picture.jpg); /* в папочке image лежит картинка с названием fon.jpg */
+    background-size: 1920px , 1080px;
+    background-repeat:no-repeat;
+
+    font-family: "Comic Sans MS", serif;
+    color: red;
+}
+
+.main{
+    right: auto;
+    left: auto;
+    margin: 500px;
+    border: 3px solid #b3d4fc;
+    padding: 10px ;
+    text-decoration-color: #b3d4fc;
+    text-align: center;
+}
