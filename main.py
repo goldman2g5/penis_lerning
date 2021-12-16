@@ -16,7 +16,7 @@ BASIC наш насущный дай нам;
 во веки веков,
 ENTER.
 
-Раз прочитано: 3
+Раз прочитано: 4
 
 """
 
@@ -29,6 +29,7 @@ from sklearn.model_selection import KFold
 from tensorflow import keras
 from tensorflow.keras.utils import to_categorical
 
+
 path = './kaggle/'
 data = pd.read_csv(path + 'icml_face_data.csv')
 emotions = {0: 'Angry', 1: 'Disgust', 2: 'Fear', 3: 'Happy', 4: 'Sad', 5: 'Surprise', 6: 'Neutral'}
@@ -38,6 +39,7 @@ X = data.emotion
 kf = KFold(n_splits=6)
 for train, test in kf.split(X):
     print("%s %s" % (train, test))
+
 
 print(data)
 
@@ -142,9 +144,10 @@ print(test_accuracy)
 conf_mat = confusion_matrix(test_lbls, test_pred)
 pd.DataFrame(conf_mat, columns=emotions.values(), index=emotions.values())
 
-# Код ниже стоит под большим вопросом нужен ли он, просто хуева туча нейросетей
 
 """
+# Код ниже стоит под большим вопросом нужен ли он, просто хуева туча нейросетей
+
 
 model_cnn = models.Sequential()
 model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
