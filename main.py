@@ -56,7 +56,7 @@ def parse_data(deta):
     return image_array, image_label
 
 
-# Splitting the data into train, validation and testing set thanks to Usage column
+# Делим на трейн, валидацию и тест, спасибо usage за облегчение моих мучений
 train_imgs, train_lbls = parse_data(data[data[" Usage"] == "Training"])
 val_imgs, val_lbls = parse_data(data[data[" Usage"] == "PrivateTest"])
 test_imgs, test_lbls = parse_data(data[data[" Usage"] == "PublicTest"])
