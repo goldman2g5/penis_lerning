@@ -5,3 +5,4 @@ tensorflow~=2.7.0
 keras~=2.7.0
 sklearn~=0.0
 scikit-learn~=1.0.1
+Flask~=2.0.1
