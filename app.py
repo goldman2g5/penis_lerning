@@ -22,11 +22,25 @@ def login():
     a = cur.execute(f'SELECT login, password FROM users WHERE login = "{username}" AND password = "{password}";')
 
     if a == 1:
-        message = "Correct username and password"
+        message = "Correct username and paassword"
     elif a == 0:
         message = "Wrong username or password"
     return render_template('login.html', message=message)
 
+
+@app.route('/neyronka/', methods=['post', 'get'])
+def neyronka():
+    message = ''
+    username = request.form.get('username')  # запрос к данным формы
+    password = request.form.get('password')
+    cur = dbh.cursor()
+    a = cur.execute(f'SELECT login, password FROM users WHERE login = "{username}" AND password = "{password}";')
+
+    if a == 1:
+        message = "Correct username and password"
+    elif a == 0:
+        message = "Wrong username or password"
+    return render_template('login.html', message=message)
 
 
 @app.route('/user/<string:name>/<int:id>')
