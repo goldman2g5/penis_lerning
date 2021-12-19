@@ -25,7 +25,8 @@ def login():
         message = "Correct username and password"
     elif a == 0:
         message = "Wrong username or password"
-    return render_template('index.html', message=message)
+    return render_template('login.html', message=message)
+
 
 
 @app.route('/user/<string:name>/<int:id>')
