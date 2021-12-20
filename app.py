@@ -1,3 +1,35 @@
+"""
+Анекдоты:
+
+    Анекдот № 1:
+    Прыгает девочка на скакалке, рядом на лавочку подсаживается дедок. Девочка:
+    — Дедуль, скажи раз…
+    Дед:
+    — Раз…
+    — Ты, дед, пидоpас!
+    Дед сидит офигевший. Проходит минута:
+    — Дед, скажи пять!
+    — Пять…
+    — Пидоpас опять!!
+    Дед начинает злится… Еще через некоторое время:
+    — Дед, скажи семь!
+    — Ну семь…
+    — Дед пидорас ты совсем!!!
+    Дед теряет терпение… Раздумывает, что б такого сказать:
+    — Девочка, скажи двадцать
+    -Ну двадцать
+    -Пошла нахуй
+
+    Анекдот № 2:
+    Профессор, устaв вытягивaть студентa нa тройку, говорит:
+    - Ну лaдно … Скaжи, по кaкому предмету читaлись лекции?
+    Студент молчит.
+    - Тaк… Скaжи хоть, кто читaл лекции?
+    Студент молчит.
+    - Нaводящий вопрос: ты или я?
+
+"""
+
 from flask import Flask, render_template, request, redirect
 import pymysql
 from pymysql.cursors import DictCursor
@@ -19,14 +51,17 @@ dbh = pymysql.connect(
 def login():
     message = 'Для входа введите логин и пароль'
     login, password = request.form.get('username'), request.form.get('password')  # запрос к данным формы
+
     if login is not None or password is not None:
         cur = dbh.cursor()
         cur.execute(f'SELECT login, password FROM users WHERE login = "{login}" AND password = "{password}";')
         a = cur.fetchone()
+
         if a and a['login'] == login and a['password'] == password:
             return redirect("/neyronka")
         else:
             message = "Wrong username or password"
+
     return render_template('login.html', message=message)
 
 
@@ -35,15 +70,18 @@ def registration():
     message = 'Для регистрации заполните форму ниже'
     login, password, username = request.form.get('login'), request.form.get('password'), request.form.get(
         'username')  # запрос к данным формы
+
     if login and password and username and len(login) >= 4 and len(password) >= 4 and len(username) >= 4:
         cur = dbh.cursor()
         cur.execute(
-            f'SELECT login, password FROM users WHERE login = "{login}" OR password = "{password}" OR name = "{username}";')
+            f'SELECT login, password, name FROM users WHERE login = "{login}" OR password = "{password}" OR name = "{username}";')
         b = cur.fetchone()
+
         if b is None:
             cur.execute(
                 f'INSERT INTO users (id, login, password, name) VALUES (NULL, "{login}", "{password}", "{username}");')
             return redirect("/login")
+
         else:
             message = "Логин, пароль или имя уже используются, попробуйте другие"
 
