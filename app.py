@@ -77,8 +77,8 @@
 
 """
 
-from flask import Flask, render_template, request, redirect
 import pymysql
+from flask import Flask, render_template, request, redirect
 from pymysql.cursors import DictCursor
 
 app = Flask(__name__)
