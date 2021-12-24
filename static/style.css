@@ -1,0 +1,25 @@
+
+body{
+    background-color: #202428;
+    background-repeat:no-repeat;
+    font-family: "Europa Brush", serif;
+    color: blue;
+
+
+}
+
+.main{
+   position: fixed;
+    right: auto;
+    left: auto;
+    margin: 500px;
+    padding-top: 10px;
+    padding-right: 150px;
+    text-decoration-color: blue;
+    text-align: center;
+
+}
+
+.intro{
+ height: 900px;
+}
