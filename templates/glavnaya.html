@@ -10,10 +10,10 @@
 
 <body>
 <ul>
-    <li><a href="{reg}}">Регистрация</a></li>
-    <li><a href="{{log}}">Логин</a></li>
-    <li><a href="{{neyron}}">Нейросеть</a></li>
-    <li><a href="{{bd}}">База</a></li>
+    <li><a href="{{ url_for('registration') }}">Регистрация</a></li>
+    <li><a href="{{ url_for('login') }}">Логин</a></li>
+    <li><a href="{{ url_for('neyronka') }}">Нейросеть</a></li>
+    <li><a href="{{ url_for('login') }}">База</a></li>
 </ul>
 </body>
 </html>
