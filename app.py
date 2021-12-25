@@ -70,11 +70,14 @@ def neyronka():
 @app.route('/gigabaza', methods=['post', 'get'])
 def baza():
     cur = dbh.cursor()
-    cur.execute(f"SELECT admins.id, admins.name, room.id, room.room_name, room.console_id, room.admin_id, room_rent.id, room_rent.rent_time, room_rent.guest_id, room_rent.room_id, console.id, console  FROM admins, room, room_rent, console, guests")
-    var = cur.fetchone()
-    admin_id, admin_name = "id: " + str(var.get("id")), "Имя: " + var.get("name")
+    table = request.form.get('admins')
+    print(table)
+    # cur.execute(f"SELECT admins.id, admins.name, room.id, room.room_name FROM admins, room, room_rent, console, guests")
+    cur.execute(f"SELECT *FROM admins, room")
+    var = cur.fetchone()  # room.console_id, room.admin_id, room_rent.id, room_rent.rent_time, room_rent.guest_id, room_rent.room_id
     print(var)
-    return render_template('baza.html', admin_id=admin_id, admin_name=admin_name)
+    admins, room = var.get("admins"), var.get("room")
+    return render_template('baza.html', admin_id=admins, admin_name=room)
 
 if __name__ == "__main__":
     app.run(debug=True)
