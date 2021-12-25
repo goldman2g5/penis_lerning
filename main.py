@@ -1,268 +1,146 @@
-"""
-Для того чтобы нейросеть работала надо читать эту молитву каждый раз:
-
-Отче наш, иже еси в моем PC
-Да святится имя и расширение Твое
-Да придет прерывание Твое и да будет воля твоя
-BASIC наш насущный дай нам;
-И прости нам дизассемблеры и антивирусы наши,
-как Копиpайты прощаем мы.
-И не введи нас в Exception Error,
-но избавь нас от зависания,
-ибо Твое есть адpессное пространство,
-порты и регистры
-Во имя CTRLа, ALTa и Святого DELa,
-всемогущего RESETa
-во веки веков,
-ENTER.
-
-Раз прочитано: 666
-
-"""
-
-import os
-
-import numpy as np
 import pandas as pd
-from keras import models, layers
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import random
+
 from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import KFold
-from tensorflow import keras
-from tensorflow.keras.utils import to_categorical
+import tensorflow as tf
 
-path = './kaggle/'
-data = pd.read_csv(path + 'icml_face_data.csv')
+tf.random.set_seed(0)
+var = tf.keras.backend.clear_session
+
+path = '/kaggle/'
+tdat = pd.read_csv(path + 'icml_face_data.csv')
+tdat.sample(5)
+
 emotions = {0: 'Angry', 1: 'Disgust', 2: 'Fear', 3: 'Happy', 4: 'Sad', 5: 'Surprise', 6: 'Neutral'}
-classes = dict(zip(range(0, 7), (((data[data[' Usage'] == 'Training']['emotion'].value_counts()).sort_index()) / len(
-    data[data[' Usage'] == 'Training']['emotion'])).tolist()))
-X = data.emotion
-kf = KFold(n_splits=6)
-for train, test in kf.split(X):
-    print("%s %s" % (train, test))
 
-print(data)
+tdat.info()
+
+dat = tdat.copy()
+dat.drop_duplicates(inplace=True)
+dat.info()
+
+dat[' Usage'].unique()
+
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 5))
+sns.countplot(data=dat[dat[' Usage'] == 'Training'], x='emotion', ax=ax1).set_title('Training')
+ax1.set_xticklabels(emotions.values())
+sns.countplot(data=dat[dat[' Usage'] == 'PublicTest'], x='emotion', ax=ax2).set_title('Testing')
+ax2.set_xticklabels(emotions.values())
+sns.countplot(data=dat[dat[' Usage'] == 'PrivateTest'], x='emotion', ax=ax3).set_title('Validation')
+ax3.set_xticklabels(emotions.values())
 
 
-def parse_data(deta):
-    image_array = np.zeros(shape=(len(deta), 48, 48))
-    image_label = np.array(list(map(int, deta['emotion'])))
+def prepare_data(data):
+    image_array = np.zeros(shape=(len(data), 48, 48))
+    image_label = np.array(list(map(int, data['emotion'])))
 
-    for i, row in enumerate(deta.index):
-        image = np.fromstring(deta.loc[row, ' pixels'], dtype=int, sep=' ')
+    for i, row in enumerate(data.index):
+        image = np.fromstring(data.loc[row, ' pixels'], dtype=int, sep=' ')
         image = np.reshape(image, (48, 48))
         image_array[i] = image
 
     return image_array, image_label
 
 
-# Делим на трейн, валидацию и тест, спасибо usage за облегчение моих мучений
-train_imgs, train_lbls = parse_data(data[data[" Usage"] == "Training"])
-val_imgs, val_lbls = parse_data(data[data[" Usage"] == "PrivateTest"])
-test_imgs, test_lbls = parse_data(data[data[" Usage"] == "PublicTest"])
-train_images = train_imgs.reshape((train_imgs.shape[0], 48, 48, 1))
-train_images = train_images.astype('float32') / 255
-val_images = val_imgs.reshape((val_imgs.shape[0], 48, 48, 1))
-val_images = val_images.astype('float32') / 255
-test_images = test_imgs.reshape((test_imgs.shape[0], 48, 48, 1))
-test_images = test_images.astype('float32') / 255
+def sample_plot(x, y=None):
+    # x, y are numpy arrays
+    n = 20
+    samples = random.sample(range(x.shape[0]), n)
 
-print("train shape", np.shape(train_imgs))
-print("validation shape", np.shape(val_imgs))
-print("validatio shape", np.shape(val_imgs))
-print(train_imgs)
-
-model_mlp = keras.Sequential()
-model_mlp.add(layers.Flatten(input_shape=(48, 48, 1)))
-model_mlp.add(layers.Dense(units=120, activation='relu'))
-model_mlp.add(layers.Dense(units=84, activation='relu'))
-model_mlp.add(layers.Dense(units=7, activation='softmax'))
-model_mlp.compile(loss=keras.losses.SparseCategoricalCrossentropy(), optimizer=keras.optimizers.Adam(lr=1e-3),
-                  metrics=['accuracy'])
-
-model_mlp.summary()
-
-if not os.listdir('/weights/mlp'):
-    print("MLP AI doesn't have weights! "
-          "Learning...")
-    model_mlp.fit(train_imgs, train_lbls,
-                  epochs=10, batch_size=32,
-                  validation_data=(val_imgs, val_lbls), verbose=1)
-
-    model_mlp.save_weights('./weights/mlp/mlp.hdf5')
-else:
-    print("MLP AI has weights already")
-    model_mlp.load_weights('./weights/mlp/mlp.hdf5')
-
-train_labels = to_categorical(train_lbls)
-val_labels = to_categorical(val_lbls)
-test_labels = to_categorical(test_lbls)
-
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='relu'))
-model_cnn.add(layers.Dense(7, activation='sigmoid'))
-model_cnn.compile(optimizer=keras.optimizers.Adam(lr=1e-3), loss='categorical_crossentropy', metrics=['accuracy'])
-model_cnn.summary()
-
-if not os.listdir('/weights/cnn'):
-    print("CNN AI doesn't have weights! "
-          "Learning...")
-    history = model_cnn.fit(train_images, train_labels,
-                            validation_data=(val_images, val_labels),
-                            class_weight=classes,
-                            epochs=12,
-                            batch_size=512)
-
-    model_mlp.save_weights('./weights/cnn/cnn.hdf5')
-else:
-    print("CNN AI has weights already")
-    model_mlp.load_weights('./weights/cnn/cnn.hdf5')
+    figs, axs = plt.subplots(2, 10, figsize=(25, 5), sharex=True, sharey=True)
+    ax = axs.ravel()
+    for i in range(n):
+        ax[i].imshow(x[samples[i], :, :], cmap=plt.get_cmap('gray'))
+        ax[i].set_xticks([])
+        ax[i].set_yticks([])
+        if y is not None:
+            ax[i].set_title(emotions[y[samples[i]]])
 
 
-test_prob = model_cnn.predict(test_images)
-test_pred = np.argmax(test_prob, axis=1)
-test_accuracy = np.mean(test_pred == test_lbls)
-print(test_accuracy)
+train_image_array, train_image_label = prepare_data(dat[dat[' Usage'] == 'Training'])
+val_image_array, val_image_label = prepare_data(dat[dat[' Usage'] == 'PrivateTest'])
+test_image_array, test_image_label = prepare_data(dat[dat[' Usage'] == 'PublicTest'])
 
-conf_mat = confusion_matrix(test_lbls, test_pred)
-pd.DataFrame(conf_mat, columns=emotions.values(), index=emotions.values())
+train_images = train_image_array.reshape((train_image_array.shape[0], 48, 48, 1))
+train_images = train_images.astype('float32')
+val_images = val_image_array.reshape((val_image_array.shape[0], 48, 48, 1))
+val_images = val_images.astype('float32')
+test_images = test_image_array.reshape((test_image_array.shape[0], 48, 48, 1))
+test_images = test_images.astype('float32')
 
-"""
-# Код ниже стоит под большим вопросом нужен ли он, просто хуева туча нейросетей
+train_labels = tf.keras.utils.to_categorical(train_image_label)
+val_labels = tf.keras.utils.to_categorical(val_image_label)
+test_labels = tf.keras.utils.to_categorical(test_image_label)
 
-
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='selu'))
-model_cnn.add(layers.Dense(7, activation='softmax'))
+sample_plot(val_image_array, val_image_label)
 
 
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='selu'))
-model_cnn.add(layers.Dense(7, activation='sigmoid'))
+sample_plot(test_image_array, test_image_label)
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.experimental.preprocessing.Rescaling(scale=1. / 255, input_shape=(48, 48, 1)),
+    tf.keras.layers.experimental.preprocessing.RandomContrast(factor=0.2),
+    tf.keras.layers.experimental.preprocessing.RandomFlip(mode='horizontal'),
+
+    tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+
+    tf.keras.layers.Conv2D(16, 5, activation='relu', padding='same'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+
+    tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.MaxPooling2D(2),
+
+    tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+
+    tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
+    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dropout(0.2),
+
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dropout(0.4),
+
+    tf.keras.layers.Dense(256, activation='relu'),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(len(emotions), activation='softmax'),
+])
 
 
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='elu'))
-model_cnn.add(layers.Dense(7, activation='softmax'))
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+earlystop = tf.keras.callbacks.EarlyStopping(patience=10, min_delta=1e-3, restore_best_weights=True)
+lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', patience=3, verbose=1, factor=0.5, min_lr=1e-7)
 
 
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='elu'))
-model_cnn.add(layers.Dense(7, activation='sigmoid'))
+wt = dat[dat[' Usage'] == "Training"].groupby('emotion').agg('count')
+
+wt['fraction'] = wt[' pixels'] / np.sum(wt[' pixels'])
+class_weights = dict(zip(range(7), wt.fraction))
 
 
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='relu'))
-model_cnn.add(layers.Dense(7, activation='sigmoid'))
+hist = model.fit(train_images, train_labels,
+                 validation_data=(val_images, val_labels),
+                 epochs=50,
+                 class_weight=class_weights,
+                 batch_size=128,
+                 callbacks=[earlystop, lr])
 
+for key in hist.history.keys():
+    plt.plot(hist.history[key], label=key)
+plt.legend()
 
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='relu'))
-model_cnn.add(layers.Dense(7, activation='sigmoid'))
+model.evaluate(test_images, test_labels)
+test_pred = model.predict(test_images)
+confusion_matrix(y_true=test_image_label, y_pred=np.argmax(test_pred, axis=1))
 
-
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='relu'))
-model_cnn.add(layers.Dense(7, activation='softmax'))
-
-
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='relu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='relu'))
-model_cnn.add(layers.Dense(7, activation='softmax'))
-
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='elu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='selu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='selu'))
-model_cnn.add(layers.Dense(7, activation='sigmoid'))
-
-model_cnn = models.Sequential()
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu', input_shape=(48, 48, 1)))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(128, (3, 3), activation='selu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.MaxPool2D((2, 2)))
-model_cnn.add(layers.Conv2D(64, (3, 3), activation='elu'))
-model_cnn.add(layers.Flatten())
-model_cnn.add(layers.Dense(64, activation='relu'))
-model_cnn.add(layers.Dense(7, activation='sigmoid'))
-
-"""
+model.summary()
