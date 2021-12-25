@@ -1,7 +1,7 @@
 
 
 import pymysql
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 from pymysql.cursors import DictCursor
 
 app = Flask(__name__)
@@ -33,9 +33,9 @@ def registration():
         cur = dbh.cursor()
         cur.execute(
             f'SELECT login, password, name FROM users WHERE login = "{login}" OR password = "{password}" OR name = "{username}";')
-        b = cur.fetchone()
+        huy = cur.fetchone()
 
-        if b is None:
+        if huy is None:
             cur.execute(
                 f'INSERT INTO users (id, login, password, name) VALUES (NULL, "{login}", "{password}", "{username}");')
             return redirect("/login")
@@ -65,6 +65,16 @@ def login():
 @app.route('/neyronka', methods=['post', 'get'])
 def neyronka():
     return render_template('neyronka.html')
+
+
+@app.route('/gigabaza', methods=['post', 'get'])
+def baza():
+    cur = dbh.cursor()
+    cur.execute(f"SELECT admins.id, admins.name, room.id, room.room_name, room.console_id, room.admin_id, room_rent.id, room_rent.rent_time, room_rent.guest_id, room_rent.room_id, console.id, console  FROM admins, room, room_rent, console, guests")
+    var = cur.fetchone()
+    admin_id, admin_name = "id: " + str(var.get("id")), "Имя: " + var.get("name")
+    print(var)
+    return render_template('baza.html', admin_id=admin_id, admin_name=admin_name)
 
 if __name__ == "__main__":
     app.run(debug=True)
