@@ -3,20 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>baza</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/baza.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style> body{background: #f9f9f9;} .w-100{width:100%} .w-50{width:50%}</style>
 </head>
 <body>
-<form action="" method="post">
-						<div class="table">
-							<label for="admins" class="form-label">Таблица</label>
-	                        <select class="form-select" aria-label="table">
-  								<option name="admins" selected>admins</option>
-							</select>
-						</div>
-</form>
-	<tr>
-		<br0>Писька</br0>
-	</tr>
-</table>
+    <div class="container">
+    <div class="row">
+        <h1 class="text-center">Проект ебучий</h1>
+    <div class="col-6">
+    <form action="" class="pt-5" method="post" id="form">
+      <div class="form-group">
+          <label class="form-check-label pt-1 d-block" for="admins">Check me out</label>
+        <input type="email" class="form-control" id="" aria-describedby="emailHelp" placeholder="Enter email">
+      </div>
+      <div class="form-group table">
+          <label class="form-check-label pt-1" for="admins">Check me out</label>
+            <select class="form-select" aria-label="table" id="bd_type">
+                <option name="admins" value="admins" selected>admins</option>
+                <option name="room" value="room" selected>room</option>
+                <option name="console" value="console" selected>console</option>
+                <option name="rent_room" value="admins_test4" selected>rent_room</option>
+                <option name="quests" value="quests" selected>guests</option>
+            </select>
+      </div>
+     <button type="submit" class="btn btn-primary btn-lg  w-100">Large button</button>
+    </form>
+    </div>
+        <div class="col-3">
+        <img class="d-block img-fluid" src="https://i.pinimg.com/736x/a2/59/54/a25954d0f931bef5dd51cb792e362890.jpg">
+        </div>
+    </div>
+        <div class="row pt-5">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">First</th>
+                  <th scope="col">Last</th>
+                  <th scope="col">Handle</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mark</td>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Jacob</td>
+                  <td>Thornton</td>
+                  <td>@fat</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Larry</td>
+                  <td>the Bird</td>
+                  <td>@twitter</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+ <script src="/static/js/basa.js"></script>
 </body>
 </html>

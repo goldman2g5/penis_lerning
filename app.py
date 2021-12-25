@@ -1,7 +1,7 @@
 
 
 import pymysql
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from pymysql.cursors import DictCursor
 
 app = Flask(__name__)
@@ -66,18 +66,24 @@ def login():
 def neyronka():
     return render_template('neyronka.html')
 
+@app.route('/get_piskka', methods=['GET', 'POST'])
+def get_name():
+    name = request.form['bd_type']
+    print(name)
+    return render_template('login.html')
 
 @app.route('/gigabaza', methods=['post', 'get'])
 def baza():
     cur = dbh.cursor()
     table = request.form.get('admins')
-    print(table)
+    """print(table)"""
     # cur.execute(f"SELECT admins.id, admins.name, room.id, room.room_name FROM admins, room, room_rent, console, guests")
     cur.execute(f"SELECT *FROM admins, room")
     var = cur.fetchone()  # room.console_id, room.admin_id, room_rent.id, room_rent.rent_time, room_rent.guest_id, room_rent.room_id
     print(var)
     admins, room = var.get("admins"), var.get("room")
-    return render_template('baza.html', admin_id=admins, admin_name=room)
+    return render_template('baza.html', table=table, admin_name=room)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
