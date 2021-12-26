@@ -20,7 +20,7 @@
       </div>
       <div class="form-group table">
           <label class="form-check-label pt-1" for="admins">Check me out</label>
-            <select class="form-select" aria-label="table" id="bd_type">
+            <select class="form-select" aria-label="table" id="zalupa">
                 <option name="admins" value="admins" selected>admins</option>
                 <option name="room" value="room" selected>room</option>
                 <option name="console" value="console" selected>console</option>
@@ -54,11 +54,9 @@
               <tbody>
 
               <tr>
-              {% for i in keys_list %}
-                  <th>{{ i }}</th>
-              {% endfor %}
-              {% for z in value_list %}
-                  <th>{{ z }}</th>
+              {% for i in list_len %}
+                  <th>{{ keys_list[i] }}</th>
+                  <th>{{ value_list[i] }}</th>
                 </tr>
               {% endfor %}
 
