@@ -24,7 +24,7 @@
                 <option name="admins" value="admins" selected>admins</option>
                 <option name="room" value="room" selected>room</option>
                 <option name="console" value="console" selected>console</option>
-                <option name="rent_room" value="rent_room" selected>rent_room</option>
+                <option name="rent_room" value="room_rent" selected>room_rent</option>
                 <option name="quests" value="guests" selected>guests</option>
             </select>
           <label class="form-check-label pt-1" for="opezdal">Check me out</label>
@@ -34,7 +34,7 @@
               {% endfor %}
             </select>
           <label for="input_db">Check me out</label>
-                        <input name="input_db" class="form-control"  placeholder="Jopa))">
+                        <input name="get_input" class="form-control" id="get_input" placeholder="Jopa))">
       </div>
      <button type="submit" class="btn btn-primary btn-lg  w-100">Выебать глобус</button>
     </form>
@@ -65,6 +65,11 @@
         </div>
     </div>
     </div>
+    {% for i in list_len %}
+          {% for z in value_list %}
+    {{ z }}
+     {% endfor %} {% endfor %}
+
  <script src="/static/js/basa.js"></script>
 </body>
 </html>

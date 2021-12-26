@@ -67,18 +67,26 @@ def neyronka():
     return render_template('neyronka.html')
 
 
+@app.route('/garfield_race', methods=['post', 'get'])
+def gonki():
+    return render_template('gonki.html')
+
+
 keys_list = []
 value_list = []
+column = None
+table = None
+input_ = None
 @app.route('/get_piskka', methods=['GET', 'POST'])
 def get_name():
-    name = request.form['zalupa']
-    if name:
+    global table
+    global keys_list
+    global value_list
+    table = request.form['zalupa']
+    if table:
         cur = dbh.cursor()
-        cur.execute(f"SELECT *FROM {name}")
+        cur.execute(f"SELECT *FROM {table}")
         var = cur.fetchone()
-        print(var)
-        global keys_list
-        global value_list
 
         value_list = list(var.values())
         keys_list = list(var.keys())
@@ -87,13 +95,28 @@ def get_name():
 
 @app.route('/get_column', methods=['GET', 'POST'])
 def get_column():
+    global column
     column = request.form["opezdal"]
-    print(column)
+    return render_template('baza.html')
+
+@app.route('/get_input', methods=['GET', 'POST'])
+def get_input():
+    global input_
+    input_ = request.form['get_input']
+    if input_.isnumeric():
+        input_ = int(input("глобус"))
     return render_template('baza.html')
 
 
 @app.route('/gigabaza', methods=['post', 'get'])
 def baza():
+    global input_
+    if input_ and table and column:
+        cur = dbh.cursor()
+        print(table)
+        print(column)
+        cur.execute(f'INSERT INTO {table} ({column}) VALUES ({input_});')
+
     return render_template('baza.html', keys_list=keys_list, value_list=value_list, list_len=list(range(len(value_list))))
 
 
