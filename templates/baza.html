@@ -24,8 +24,16 @@
                 <option name="admins" value="admins" selected>admins</option>
                 <option name="room" value="room" selected>room</option>
                 <option name="console" value="console" selected>console</option>
-                <option name="rent_room" value="admins_test4" selected>rent_room</option>
-                <option name="quests" value="quests" selected>guests</option>
+                <option name="rent_room" value="rent_room" selected>rent_room</option>
+                <option name="quests" value="guests" selected>guests</option>
+            </select>
+          <label class="form-check-label pt-1" for="admins">Check me out</label>
+            <select class="form-select" aria-label="table" id="bd_type">
+                <option name="admins" value="admins" selected>{{var1}}</option>
+                <option name="room" value="room" selected>{{ var2 }}</option>
+                <option name="console" value="console" selected>{{ var3 }}</option>
+                <option name="rent_room" value="rent_room" selected>{{ var4 }}</option>
+                <option name="quests" value="guests" selected>{{ var5 }}</option>
             </select>
       </div>
      <button type="submit" class="btn btn-primary btn-lg  w-100">Large button</button>
@@ -39,31 +47,21 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
-                  <th scope="col">Handle</th>
+                  <th scope="col">Key</th>
+                  <th scope="col">Value</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
+
+              <tr>
+              {% for i in keys_list %}
+                  <th>{{ i }}</th>
+              {% endfor %}
+              {% for z in value_list %}
+                  <th>{{ z }}</th>
                 </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Larry</td>
-                  <td>the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+              {% endfor %}
+
               </tbody>
             </table>
         </div>
