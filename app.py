@@ -79,28 +79,21 @@ def get_name():
         print(var)
         global keys_list
         global value_list
-        global c
 
         value_list = list(var.values())
         keys_list = list(var.keys())
-        c = 0
 
+    return render_template('baza.html')
+
+@app.route('/get_column', methods=['GET', 'POST'])
+def get_column():
+    column = request.form["opezdal"]
+    print(column)
     return render_template('baza.html')
 
 
 @app.route('/gigabaza', methods=['post', 'get'])
 def baza():
-    var1 = keys_list[0] if len(keys_list) >= 1 else ""
-    var2 = keys_list[1] if len(keys_list) >= 2 else ""
-    var3 = keys_list[2] if len(keys_list) >= 3 else ""
-    var4 = keys_list[3] if len(keys_list) >= 4 else ""
-    var5 = keys_list[4] if len(keys_list) >= 5 else ""
-    val1 = value_list[0] if len(value_list) >= 1 else ""
-    val2 = value_list[1] if len(value_list) >= 2 else ""
-    val3 = value_list[2] if len(value_list) >= 3 else ""
-    val4 = value_list[3] if len(value_list) >= 4 else ""
-    val5 = value_list[4] if len(value_list) >= 5 else ""
-
     return render_template('baza.html', keys_list=keys_list, value_list=value_list, list_len=list(range(len(value_list))))
 
 

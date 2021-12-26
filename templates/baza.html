@@ -27,16 +27,16 @@
                 <option name="rent_room" value="rent_room" selected>rent_room</option>
                 <option name="quests" value="guests" selected>guests</option>
             </select>
-          <label class="form-check-label pt-1" for="admins">Check me out</label>
-            <select class="form-select" aria-label="table" id="bd_type">
-                <option name="admins" value="admins" selected>{{var1}}</option>
-                <option name="room" value="room" selected>{{ var2 }}</option>
-                <option name="console" value="console" selected>{{ var3 }}</option>
-                <option name="rent_room" value="rent_room" selected>{{ var4 }}</option>
-                <option name="quests" value="guests" selected>{{ var5 }}</option>
+          <label class="form-check-label pt-1" for="opezdal">Check me out</label>
+            <select class="form-select" aria-label="table" id="opezdal">
+                {% for i in list_len %}
+                  <option name="{{ keys_list[i] }}" value="{{ keys_list[i] }}">{{ keys_list[i] }}</option>
+              {% endfor %}
             </select>
+          <label for="input_db">Check me out</label>
+                        <input name="input_db" class="form-control"  placeholder="Jopa))">
       </div>
-     <button type="submit" class="btn btn-primary btn-lg  w-100">Large button</button>
+     <button type="submit" class="btn btn-primary btn-lg  w-100">Выебать глобус</button>
     </form>
     </div>
         <div class="col-3">
