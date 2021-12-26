@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>CodePen - Just driving on a track (use a,w,d / arrows)</title>
+    <link rel="stylesheet" href="/static/gonki.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="leftSide">
+    <svg class='main' viewBox="0 0 150 150" style="opacity:0" fill="none">
+        <defs>
+            <path id="track" d="M0,0c37-33,89-44,125-36s46,36,46,66s36,62,55,71c21,10,40,20,70,9s57-8,69,4c13,13,10,50-13,70
+	c-20,17-43,60-46,92c-3,37-34,89-114,84c-87-5-99-89-95-117s25-97-7-130s-72-7-98-23S-32,28,0,0z"/>
+            <image id="carImg" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFkAAAAqCAMAAADvYwfyAAAAYFBMVEX///////////////9HcEz///////8AAAAAAAD///8AAAD////////W1tYAAAD///////8QEBD///8AAAAAAAAAAAAxMTEAAAAEBAQICAjf39+1tbWnp6d7e3t+fn4AAACmOMjAAAAAH3RSTlM+N05aAIFFzNZl7y4YD+VrI1N2p/eBNrtpmv3vvuqRVJRC9AAABPZJREFUeAGd14mioyoMBmCWEwoCiiva9f3f8iap9Wacff6e/ehnGqOl6uu3USl//UOknI/ILVJZfinkz34/k3MsOS9936/rOve4YUqpaKtLSSmWeEQrZ2ywxjkXYyllmeeVM9NeP5ATGOuU2vcuidxi7JIAYJm3DXfvOQuHjxsxRav0Se7XPp/llO+32y0GhcFqjLHWKhPqy499iakffTNNU9M0bYsfR7y/1B6c0kprHbWzOsVv5XSlPIHNELqBArC9vG8bX9ekVOznsV4uaFFqreOIzwSzGK2pHGNjom4uScjP6/V2eyQYmOy6LmAsLK+WGd80ftwswGCUZsaEAT4JkaKx/7pkPPxYxy3vckH4QXCQgQ7LfcuYpikQQAY3P3DjNMZZ/Nmkdaw1s5zv19szAVClUp6p5EOuMFjjlHpXTXUb6P04r/j0i7JAMcoZwKRxZDleb5EObHey4w8YfOOFPIMl+YhDZH5RJjynvmIP+s5qZwziw5hRzumJPzIrA/3USnlh2R0u1/zCacF/4sBgplcF9x53SCSXgPUGUS8Gv8L4ErBvC1hDNZ9l6hinVv/qIWplbOdiQdnZ7qN+pgIDjpvBIfjiPrJmWf0ve84F01RQWjsTQiFZIUkhllBjuJ7U0HVwyBWOmvVJphnHLXHYWz9YnpFANWdNIlXMKIWeK6xHm0luRuhYdp9myJrpg0I9I9kMOn2ppIcd3s/P+1qAbfJSniHIPhMuavZUM7VjIVmZQaFcFMvBOkY5JI8TwUK2ss/nmnd5Wll2wZHsSO4kzEetKHvMLq9ynB3bh8x95kwzKJZNyiqSTLCWMfbSsMw55DetxRk8dWMER3WxXAzVbFiO7+BP1kj5XDPBos9HyTR2Z5lrjvxg2nLNl7P803ne5fYCBgl3kmXMD2Us+qBJXneZx1nIRsp7O/iD5K42BytmQ7bjkDFHN0hWpnMoR5K5aDl1BnA2uNFyns/X4C7jg2qWZ5Dl99SFTxM/8vjtlbKhLPuMETVf9uBmDmt2XHNRXUc0l7SPlbwGPQeLGax1p27MomY5z2ZQKCeNKtN840DeON7rG7mtwzF2mmEh04bH1c1yp1HOJB83O+LZ5xu//1++GDjfN04yxrcRdKQ+60T354HAA2c9WLqLStnrt+yUPndDtNlDQNmZEEkuDsAid/iMg9nv/H6ni+wGygrlTci1XuprP4HW8p3/606vg+GUgYZDyvmQKSTbXaYQfJmmdzNccJHlfH1E4Lpl5dToXZaXN1V8TN34wjVZg5kw+Cq+vGGzv8J+ldv1sS0BkBM4WLGQOS5Cvpp23EClmluPBY+4pOz3it0AanyvkRKtvbYIjMqVjD+vZHgmDcUaS5WVqOwg1mHYCfwh1ZlkzP1KtgbbDZSuYxn8tMu0nKjw8+AxVUS2Q12nfqxj3mVsNSUDdc9anA7yoTSTR7W9bGtS1hVcR2NmzNovOZWoTccnyJKrVVn6eRvR7cX6Oab7/XYPTqt9yWqMi5Dbpm59iiX1c/XNJENraZ74BbpgeHFc8kKLXLnKJRosgOPbPn0UTNSgkwUw/VYp43fhZ5CALi9rsCqjtMrfv0/BwpZ3+nVJmBIVgC4Rf0qlpEQfFOqo289bF7Ae4xSWgxtmqlfKR3743gqPmMS/Eu6Pyfmzy0wFZUwvXZJ/G0XKz5PxY39gpPz7uPL1D/kPQP94mKNBXUgAAAAASUVORK5CYII="/>
+        </defs>
+
+        <g id="pov1">
+
+            <g id="baseGroup">
+                <use href="#track" stroke="#C2B280" stroke-width="45" />
+                <use href="#track" stroke="#111" stroke-width="29" />
+                <use href="#track" stroke="#fff" stroke-dasharray="3.5 7.1" />
+                <polyline points="30,-35.5 42,-10" stroke="#fff" stroke-width="15" stroke-dasharray="3 3" />
+
+                <g class="car1Group">
+                    <g class="car1">
+                        <path fill="#f0a" d="M12,2c0,0,6.5-1,9.8,0S40,2,49,2.5S58.8,3,61.9,3S67,1,74,2s11,5,13,6s3,23,1,25s-9,7-17,7s-3-1-9-1s-17,1-25,0s-14,0-17,0s-9,1-14-4S1,23.7,1,20.9S1,11,4,8S10,2,12,2z"/>
+                        <use href="#carImg"/>
+                    </g>
+                </g>
+
+                <g class="car2Group">
+                    <g class="car2">
+                        <path fill="#0af" d="M12,2c0,0,6.5-1,9.8,0S40,2,49,2.5S58.8,3,61.9,3S67,1,74,2s11,5,13,6s3,23,1,25s-9,7-17,7s-3-1-9-1s-17,1-25,0s-14,0-17,0s-9,1-14-4S1,23.7,1,20.9S1,11,4,8S10,2,12,2z"/>
+                        <use href="#carImg"/>
+                    </g>
+                </g>
+            </g>
+
+        </g>
+    </svg>
+
+    <svg viewBox="0 0 600 600" style="opacity:0" preserveAspectRatio="xMidYMax meet">
+        <circle cx="300" cy="600" r="120" fill="rgba(0,0,0,0.7)" />
+        <circle cx="300" cy="591" r="105" fill="rgba(0,0,0,0.6)" />
+        <text class='mph' x="300" y="560" fill="#fff" text-anchor="middle" font-size="50">0</text>
+        <text x="300" y="585" fill="#fff" text-anchor="middle" font-size="16.5">mph</text>
+    </svg>
+</div>
+
+<div class="rightSide">
+    <svg class='main' viewBox="0 0 150 150" style="opacity:0" fill="none">
+
+        <g id="pov2">
+            <use href="#baseGroup" />
+        </g>
+
+    </svg>
+
+    <svg viewBox="0 0 600 600" style="opacity:0" preserveAspectRatio="xMidYMax meet">
+        <circle cx="300" cy="600" r="120" fill="rgba(0,0,0,0.7)" />
+        <circle cx="300" cy="591" r="105" fill="rgba(0,0,0,0.6)" />
+        <text class='mph' x="300" y="560" fill="#fff" text-anchor="middle" font-size="50">0</text>
+        <text x="300" y="585" fill="#fff" text-anchor="middle" font-size="16.5">mph</text>
+    </svg>
+</div>
+<!-- partial -->
+<script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+<script src='https://unpkg.com/gsap@3/dist/MotionPathPlugin.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js'></script><script  src="/static/js/gonki.js"></script>
+
+</body>
+</html>
