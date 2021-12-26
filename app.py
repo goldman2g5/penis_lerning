@@ -71,7 +71,7 @@ keys_list = []
 value_list = []
 @app.route('/get_piskka', methods=['GET', 'POST'])
 def get_name():
-    name = request.form['bd_type']
+    name = request.form['zalupa']
     if name:
         cur = dbh.cursor()
         cur.execute(f"SELECT *FROM {name}")
@@ -79,10 +79,11 @@ def get_name():
         print(var)
         global keys_list
         global value_list
+        global c
 
         value_list = list(var.values())
         keys_list = list(var.keys())
-
+        c = 0
 
     return render_template('baza.html')
 
@@ -100,7 +101,7 @@ def baza():
     val4 = value_list[3] if len(value_list) >= 4 else ""
     val5 = value_list[4] if len(value_list) >= 5 else ""
 
-    return render_template('baza.html', keys_list=keys_list, value_list=value_list)
+    return render_template('baza.html', keys_list=keys_list, value_list=value_list, list_len=list(range(len(value_list))))
 
 
 if __name__ == "__main__":
