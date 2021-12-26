@@ -11,40 +11,26 @@
 <body>
     <div class="container">
     <div class="row">
-        <h1 class="text-center">Проект ебучий</h1>
+        <h1 class="text-center">Проект</h1>
     <div class="col-6">
+
     <form action="" class="pt-5" method="post" id="form">
-      <div class="form-group">
-          <label class="form-check-label pt-1 d-block" for="admins">Check me out</label>
-        <input type="email" class="form-control" id="" aria-describedby="emailHelp" placeholder="Enter email">
-      </div>
       <div class="form-group table">
-          <label class="form-check-label pt-1" for="admins">Check me out</label>
+          <label class="form-check-label pt-1" for="admins">Выберите базу данных</label>
             <select class="form-select" aria-label="table" id="zalupa">
-                <option name="admins" value="admins" selected>admins</option>
-                <option name="room" value="room" selected>room</option>
-                <option name="console" value="console" selected>console</option>
-                <option name="rent_room" value="room_rent" selected>room_rent</option>
-                <option name="quests" value="guests" selected>guests</option>
+                <option name="admins" value="admins" selected="selected">admins</option>
+                <option name="room" value="room">room</option>
+                <option name="console" value="console">console</option>
+                <option name="rent_room" value="room_rent">room_rent</option>
+                <option name="quests" value="guests">guests</option>
             </select>
-          <label class="form-check-label pt-1" for="opezdal">Check me out</label>
-            <select class="form-select" aria-label="table" id="opezdal">
-                {% for i in list_len %}
-                  <option name="{{ keys_list[i] }}" value="{{ keys_list[i] }}">{{ keys_list[i] }}</option>
-              {% endfor %}
-            </select>
-          <label for="input_db">Check me out</label>
-                        <input name="get_input" class="form-control" id="get_input" placeholder="Jopa))">
+
       </div>
-     <button type="submit" class="btn btn-primary btn-lg  w-100">Выебать глобус</button>
+     <button type="submit" class="btn btn-primary btn-lg  w-100">Выбрать базу</button>
     </form>
     </div>
-        <div class="col-3">
-        <img class="d-block img-fluid" src="https://i.pinimg.com/736x/a2/59/54/a25954d0f931bef5dd51cb792e362890.jpg">
-        </div>
-    </div>
-        <div class="row pt-5">
-            <table class="table">
+        <div class="col-6">
+            <table class="table" id="table">
               <thead>
                 <tr>
                   <th scope="col">Key</th>
@@ -53,23 +39,52 @@
               </thead>
               <tbody>
 
+             {% for i in var %}
               <tr>
-              {% for i in list_len %}
-                  <th>{{ keys_list[i] }}</th>
-                  <th>{{ value_list[i] }}</th>
+                  <th> {{ i.id }}</th>
+                  <th> {{ i.name }}</th>
                 </tr>
-              {% endfor %}
+    {% endfor %}
 
               </tbody>
             </table>
-        </div>
     </div>
     </div>
-    {% for i in list_len %}
-          {% for z in value_list %}
-    {{ z }}
-     {% endfor %} {% endfor %}
 
+  <div class="row">
+
+    <div class="col-6">
+  <form action="" class="pt-5" method="post" id="form_input">
+          <div class="form-group table">
+
+              <label for="input_db">Добавить пользователя</label>
+                            <input name="get_name" class="form-control" id="get_name" placeholder="Jopa))" required>
+          </div>
+         <button type="submit" class="btn btn-primary btn-lg  w-100">Добавить пользователя</button>
+        </form>
+    </div>
+
+    <div class="col-6">
+
+<form action="" class="pt-5" method="post" id="form_delete">
+
+          <div class="form-group table">
+               <label for="input_db">Удалить пользователя</label>
+              <select class="form-select" aria-label="table" id="users_to_delete">
+                  {% for i in var %}
+                <option name="{{ i.name }}" value="{{ i.id }}">{{ i.name }}</option>
+                  {% endfor %}
+            </select>
+          </div>
+         <button type="submit" class="btn btn-primary btn-lg  w-100">Удалить пользователя</button>
+        </form>
+
+    </div>
+  </div>
+
+    </div>
+
+<input id="table_vis_var" value="{{ table_vis_var }}" style="visibility :hidden"></input>
  <script src="/static/js/basa.js"></script>
 </body>
 </html>

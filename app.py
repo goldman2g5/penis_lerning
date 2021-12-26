@@ -71,53 +71,58 @@ def neyronka():
 def gonki():
     return render_template('gonki.html')
 
-
-keys_list = []
-value_list = []
 column = None
 table = None
 input_ = None
-@app.route('/get_piskka', methods=['GET', 'POST'])
+var = {1, 2}
+@app.route('/get_table', methods=['GET', 'POST'])
 def get_name():
-    global table
-    global keys_list
-    global value_list
+    global var
     table = request.form['zalupa']
     if table:
         cur = dbh.cursor()
         cur.execute(f"SELECT *FROM {table}")
-        var = cur.fetchone()
+        var = cur.fetchall()
 
-        value_list = list(var.values())
-        keys_list = list(var.keys())
-
-    return render_template('baza.html')
-
-@app.route('/get_column', methods=['GET', 'POST'])
-def get_column():
-    global column
-    column = request.form["opezdal"]
     return render_template('baza.html')
 
 @app.route('/get_input', methods=['GET', 'POST'])
 def get_input():
-    global input_
-    input_ = request.form['get_input']
-    if input_.isnumeric():
-        input_ = int(input("глобус"))
+    global new_name
+    new_name = request.form['name']
+    update_table = request.form['update_table']
+    print(update_table)
+    cur = dbh.cursor()
+    cur.execute(f"SELECT *FROM {update_table}")
+    ids = cur.fetchall()
+    new_id = []
+    for i in ids:
+        z = i.get('id')
+        z = int(z)
+        new_id.append(z)
+    new_id = new_id[-1]
+    new_id = new_id + 1
+
+    cur.execute(f'INSERT INTO {update_table} VALUES ("{new_id}", "{new_name}");')
+
     return render_template('baza.html')
 
+@app.route('/delete_user', methods=['GET', 'POST'])
+def delete_user():
+    global new_name
+    users_to_delete = request.form['users_to_delete']
+    update_table = request.form['update_table']
+    cur = dbh.cursor()
+    cur.execute(f'SET FOREIGN_KEY_CHECKS = 0;')
+    cur.execute(f'DELETE FROM {update_table} where {update_table}. id = {users_to_delete}')
+    print("Record deleted successfully")
+
+    return render_template('baza.html')
 
 @app.route('/gigabaza', methods=['post', 'get'])
 def baza():
-    global input_
-    if input_ and table and column:
-        cur = dbh.cursor()
-        print(table)
-        print(column)
-        cur.execute(f'INSERT INTO {table} ({column}) VALUES ({input_});')
 
-    return render_template('baza.html', keys_list=keys_list, value_list=value_list, list_len=list(range(len(value_list))))
+    return render_template('baza.html', var=var)
 
 
 if __name__ == "__main__":
