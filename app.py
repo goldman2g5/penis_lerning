@@ -67,41 +67,62 @@ def neyronka():
     return render_template('neyronka.html')
 
 
-keys_list = []
-value_list = []
-@app.route('/get_piskka', methods=['GET', 'POST'])
-def get_name():
-    name = request.form['zalupa']
-    if name:
-        cur = dbh.cursor()
-        cur.execute(f"SELECT *FROM {name}")
-        var = cur.fetchone()
-        print(var)
-        global keys_list
-        global value_list
-        global c
+@app.route('/garfield_race', methods=['post', 'get'])
+def gonki():
+    return render_template('gonki.html')
 
-        value_list = list(var.values())
-        keys_list = list(var.keys())
-        c = 0
+column = None
+table = None
+input_ = None
+var = {1, 2}
+@app.route('/get_table', methods=['GET', 'POST'])
+def get_name():
+    global var
+    table = request.form['zalupa']
+    if table:
+        cur = dbh.cursor()
+        cur.execute(f"SELECT *FROM {table}")
+        var = cur.fetchall()
 
     return render_template('baza.html')
 
+@app.route('/get_input', methods=['GET', 'POST'])
+def get_input():
+    global new_name
+    new_name = request.form['name']
+    update_table = request.form['update_table']
+    print(update_table)
+    cur = dbh.cursor()
+    cur.execute(f"SELECT *FROM {update_table}")
+    ids = cur.fetchall()
+    new_id = []
+    for i in ids:
+        z = i.get('id')
+        z = int(z)
+        new_id.append(z)
+    new_id = new_id[-1]
+    new_id = new_id + 1
+
+    cur.execute(f'INSERT INTO {update_table} VALUES ("{new_id}", "{new_name}");')
+
+    return render_template('baza.html')
+
+@app.route('/delete_user', methods=['GET', 'POST'])
+def delete_user():
+    global new_name
+    users_to_delete = request.form['users_to_delete']
+    update_table = request.form['update_table']
+    cur = dbh.cursor()
+    cur.execute(f'SET FOREIGN_KEY_CHECKS = 0;')
+    cur.execute(f'DELETE FROM {update_table} where {update_table}. id = {users_to_delete}')
+    print("Record deleted successfully")
+
+    return render_template('baza.html')
 
 @app.route('/gigabaza', methods=['post', 'get'])
 def baza():
-    var1 = keys_list[0] if len(keys_list) >= 1 else ""
-    var2 = keys_list[1] if len(keys_list) >= 2 else ""
-    var3 = keys_list[2] if len(keys_list) >= 3 else ""
-    var4 = keys_list[3] if len(keys_list) >= 4 else ""
-    var5 = keys_list[4] if len(keys_list) >= 5 else ""
-    val1 = value_list[0] if len(value_list) >= 1 else ""
-    val2 = value_list[1] if len(value_list) >= 2 else ""
-    val3 = value_list[2] if len(value_list) >= 3 else ""
-    val4 = value_list[3] if len(value_list) >= 4 else ""
-    val5 = value_list[4] if len(value_list) >= 5 else ""
 
-    return render_template('baza.html', keys_list=keys_list, value_list=value_list, list_len=list(range(len(value_list))))
+    return render_template('baza.html', var=var)
 
 
 if __name__ == "__main__":
