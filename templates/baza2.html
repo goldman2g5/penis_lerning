@@ -11,7 +11,7 @@
 <body>
     <div class="container">
     <div class="row">
-        <h1 class="text-center">Проект</h1>
+        <h1 class="text-center">варп</h1>
     <div class="col-6">
 
     <form action="" class="pt-5" method="post" id="form">
@@ -35,13 +35,13 @@
                 <tr>
                   <th scope="col">Id</th>
                   <th scope="col">Name</th>
-                    <th scope="col">Rent_id</th>
-                    <th scope="col">Room_name</th>
-                    <th scope="col">Console_id</th>
-                    <th scope="col">Admin.id</th>
-                    <th scope="col">Rent.time</th>
-                    <th scope="col">Guest.id</th>
-                    <th scope="col">Room.id</th>
+                    <th scope="col">speciality</th>
+                    <th scope="col">time</th>
+                    <th scope="col">teacher_id</th>
+                    <th scope="col">online_link</th>
+                    <th scope="col">fio</th>
+                    <th scope="col">group_id</th>
+                    <th scope="col">online_until</th>
                 </tr>
               </thead>
               <tbody>
@@ -50,13 +50,13 @@
               <tr>
                   <th> {{ i.id }}</th>
                   <th> {{ i.name }}</th>
-                  <th> {{ i.rent_id }}</th>
-                  <th> {{ i.room_name }}</th>
-                  <th> {{ i.console_id}}</th>
-                  <th> {{ i.admin_id }}</th>
-                  <th>{{i.rent_time}}</th>
-                  <th>{{i.guest_id}}</th>
-                  <th>{{i.room_id}}</th>
+                  <th> {{ i.speciality }}</th>
+                  <th> {{ i.time }}</th>
+                  <th> {{ i.teacher_id}}</th>
+                  <th> {{ i.online_linkl }}</th>
+                  <th>{{i.fio}}</th>
+                  <th>{{i.group_id}}</th>
+                  <th>{{i.online_until}}</th>
                 </tr>
     {% endfor %}
 

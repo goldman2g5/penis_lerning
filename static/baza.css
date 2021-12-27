@@ -14,3 +14,8 @@ td, th {
     background: maroon; /* Цвет фона ячеек */
     padding: 5px; /* Поля вокруг текста */
 }
+
+#canvas {
+    width: 100%;
+    height: 100%;
+}
