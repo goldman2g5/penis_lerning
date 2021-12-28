@@ -161,7 +161,7 @@ else:
 
     model.save("kaggle/model/models.h5")
 
-imgPath = "D:/GitHub/penis_lerning/pics/0_0.jpg"
+imgPath = "pics/0_0.jpg"
 img = Image.open(imgPath).convert('L').resize((48, 48), Image.ANTIALIAS)
 img = np.array(img)
 model.predict(img[None, :, :])
