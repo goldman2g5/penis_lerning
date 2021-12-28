@@ -11,7 +11,7 @@ from sklearn.metrics import confusion_matrix
 
 
 global elite
-global int
+global zalupka321
 
 
 def exists(filePath):
@@ -20,7 +20,6 @@ def exists(filePath):
     except OSError:
         return False
     return True
-
 
 tf.random.set_seed(0)
 var = tf.keras.backend.clear_session
@@ -164,8 +163,8 @@ else:
 
 prediction = model.predict(train_images)
 n = 1122
-int = "".join(list(emotions[np.argmax(prediction[n])]))
+zalupka321 = "".join(list(emotions[np.argmax(prediction[n])]))
 
-print("Распознан объект: ", int)
+print("Распознан объект: ", zalupka321)
 
 # ХУЙНЯ
