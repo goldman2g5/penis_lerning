@@ -6,10 +6,11 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import tensorflow as tf
+from PIL import Image
 from keras.models import load_model
 from sklearn.metrics import confusion_matrix
 
-global elite
+global imgPath
 global zalupka321
 
 
@@ -19,6 +20,7 @@ def exists(filePath):
     except OSError:
         return False
     return True
+
 
 tf.random.set_seed(0)
 var = tf.keras.backend.clear_session
@@ -159,6 +161,10 @@ else:
 
     model.save("kaggle/model/models.h5")
 
+imgPath = "D:/GitHub/penis_lerning/pics/0_0.jpg"
+img = Image.open(imgPath).convert('L').resize((48, 48), Image.ANTIALIAS)
+img = np.array(img)
+model.predict(img[None, :, :])
 
 prediction = model.predict(train_images)
 n = 1122
@@ -168,7 +174,7 @@ print("Распознан объект: ", zalupka321)
 
 """
 
-                                                   TENSORFLOW                                                 
+                                          TENSORFLOW в 3 часа ночи                                                    
                                                                                                     
                                           ````.................-------::::-`                        
                          `.-:/+ossyhhddmmmmmmmmmmmmmmdddddddddddddddddddddmmy:                      
