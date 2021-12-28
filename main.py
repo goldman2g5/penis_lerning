@@ -10,6 +10,10 @@ from keras.models import load_model
 from sklearn.metrics import confusion_matrix
 
 
+global elite
+global int
+
+
 def exists(filePath):
     try:
         os.stat(filePath)
@@ -157,15 +161,11 @@ else:
 
     model.save("kaggle/model/models.h5")
 
+
 prediction = model.predict(train_images)
-
 n = 1122
+int = "".join(list(emotions[np.argmax(prediction[n])]))
 
+print("Распознан объект: ", int)
 
-print("Выход сети:")
-print(prediction[n])
-print()
-for i in range(10):
-    print(i, "->", "{:.40f}".format(prediction[n][i]))
-print()
-print("Распознан объект: ", np.argmax(prediction[n]), "-", labels[np.argmax(prediction[n])])
+# ХУЙНЯ
