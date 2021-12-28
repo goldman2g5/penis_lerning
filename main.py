@@ -4,9 +4,19 @@ import matplotlib.pyplot as plt
 from matplotlib import image
 import seaborn as sns
 import random
+import os
 
 from sklearn.metrics import confusion_matrix
 import tensorflow as tf
+
+
+def exists(filePath):
+    try:
+        os.stat(filePath)
+    except OSError:
+        return False
+    return True
+
 
 tf.random.set_seed(0)
 var = tf.keras.backend.clear_session
@@ -114,6 +124,9 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dense(len(emotions), activation='softmax'),
 ])
 
+if exists('/weights/') is True:
+    model.load_weights('/weights/model.hdf5')
+
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss='categorical_crossentropy',
               metrics=['accuracy'])
 
@@ -125,15 +138,17 @@ wt = dat[dat[' Usage'] == "Training"].groupby('emotion').agg('count')
 wt['fraction'] = wt[' pixels'] / np.sum(wt[' pixels'])
 class_weights = dict(zip(range(7), wt.fraction))
 
-hist = model.fit(train_images, train_labels,
-                 validation_data=(val_images, val_labels),
-                 epochs=50,
-                 class_weight=class_weights,
-                 batch_size=128,
-                 callbacks=[earlystop, lr])
+if exists('/weights/') is False:
+    hist = model.fit(train_images, train_labels,
+                     validation_data=(val_images, val_labels),
+                     epochs=50,
+                     class_weight=class_weights,
+                     batch_size=128,
+                     callbacks=[earlystop, lr])
+    for key in hist.history.keys():
+        plt.plot(hist.history[key], label=key)
+    model.save_weights('/weights/model.hdf5')
 
-for key in hist.history.keys():
-    plt.plot(hist.history[key], label=key)
 plt.legend()
 
 model.evaluate(test_images, test_labels)
@@ -141,5 +156,3 @@ test_pred = model.predict(test_images)
 confusion_matrix(y_true=test_image_label, y_pred=np.argmax(test_pred, axis=1))
 
 model.summary()
-
-imgage = image.imread("fav.jpg")
