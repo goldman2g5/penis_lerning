@@ -18,11 +18,9 @@
       <div class="form-group table">
           <label class="form-check-label pt-1" for="admins">Выберите таблицу</label>
             <select class="form-select" aria-label="table" id="zalupa">
-                <option name="admins" value="admins" selected="selected">admins</option>
-                <option name="room" value="room">room</option>
-                <option name="console" value="console">console</option>
-                <option name="rent_room" value="room_rent">room_rent</option>
-                <option name="quests" value="guests">guests</option>
+                {% for i in tables %}
+                <option name="{{ i }}" value="{{ i }}" selected="selected">{{ i }}</option>
+                {% endfor %}
             </select>
 
       </div>
