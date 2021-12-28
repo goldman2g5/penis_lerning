@@ -17,6 +17,7 @@ dbh = pymysql.connect(
     autocommit=True
 )
 
+
 column = None
 table = None
 input_ = None
@@ -156,8 +157,13 @@ def delete_user():
 
 @app.route('/gigabaza', methods=['post', 'get'])
 def baza():
-
-    return render_template('baza.html', var=var, keys=keys, values=values, keys_to_add=keys_to_add)
+    cur = dbh.cursor()
+    cur.execute("SHOW TABLES")
+    tables = []
+    for i in cur:
+        tables.append(i.get(f"Tables_in_2p2s10"))
+    print(tables)
+    return render_template('baza.html', var=var, keys=keys, values=values, keys_to_add=keys_to_add, tables=tables)
 
 
 
