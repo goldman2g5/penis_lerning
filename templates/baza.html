@@ -30,37 +30,26 @@
     </form>
     </div>
         <div class="col-6">
-            <table class="table" id="table">
-              <thead>
-                <tr>
-                  <th scope="col">Id</th>
-                  <th scope="col">Name</th>
-                    <th scope="col">Rent_id</th>
-                    <th scope="col">Room_name</th>
-                    <th scope="col">Console_id</th>
-                    <th scope="col">Admin.id</th>
-                    <th scope="col">Rent.time</th>
-                    <th scope="col">Guest.id</th>
-                    <th scope="col">Room.id</th>
-                </tr>
-              </thead>
-              <tbody>
 
-             {% for i in var %}
-              <tr>
-                  <th> {{ i.id }}</th>
-                  <th> {{ i.name }}</th>
-                  <th> {{ i.rent_id }}</th>
-                  <th> {{ i.room_name }}</th>
-                  <th> {{ i.console_id}}</th>
-                  <th> {{ i.admin_id }}</th>
-                  <th>{{i.rent_time}}</th>
-                  <th>{{i.guest_id}}</th>
-                  <th>{{i.room_id}}</th>
-                </tr>
+  <table class="table" id="table2">
+      <thead>
+        <tr>
+            {% for i in keys %}
+          <th scope="col">{{ i }}</th>
+             {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+          {% for result in values %}
+    <tr>
+    {% for elem in result %}
+        <td>{{elem}}</td>
     {% endfor %}
-
-              </tbody>
+    </tr>
+{% endfor %}
+    </tr>
+      </tbody>
             </table>
     </div>
 
@@ -73,7 +62,9 @@
           <div class="form-group table">
 
               <label for="input_db">Добавить пользователя</label>
-                            <input name="get_name" class="form-control" id="get_name" placeholder="Jopa))" required>
+              {% for i in keys_to_add %}
+          <input name="{{ i.name }}" class="form-control mb-2" id="{{ i.name }}" placeholder="{{ i.name }}" type="{{i.datatype}}" required>
+             {% endfor %}
           </div>
          <button type="submit" class="btn btn-primary btn-lg  w-100">Добавить пользователя</button>
         </form>
@@ -84,10 +75,10 @@
 <form action="" class="pt-5" method="post" id="form_delete">
 
           <div class="form-group table">
-               <label for="input_db">Удалить пользователя</label>
+               <label for="input_db">Удалить строку</label>
               <select class="form-select" aria-label="table" id="users_to_delete">
-                  {% for i in var %}
-                <option name="{{ i.name }}" value="{{ i.id }}">{{ i.name }}</option>
+                  {% for i in values %}
+                <option name="{{ i }}" value="{{ i }}">{{ i }}</option>
                   {% endfor %}
             </select>
           </div>

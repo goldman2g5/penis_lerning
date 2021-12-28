@@ -1,3 +1,5 @@
+
+
 $(document).ready(function () {
 const select = document.querySelector('#zalupa').getElementsByTagName('option');
 var urlsub = window.location.href.split('?')[1];
@@ -27,15 +29,25 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
+
   $("#form_input").submit(function (event) {
-    var name = $('#get_name').val();
     var url = location.href;
     var update_table = url.substring(url.indexOf("?")+1);
+    var datas = []
+    $('#form_input input, #formId select').each(
+    function(index){
+        var input = $(this);
+        datas.push(input.val())
+
+    }
+);
+    var users_to_delete = $('#form_input').val();
+    var datas = datas.toString();
     $.ajax({
       type: "POST",
       url: "/get_input",
       data: {
-        name:name,
+        datas: datas,
         update_table:update_table,
       },
 
@@ -46,6 +58,8 @@ $(document).ready(function () {
     return false; //<---- move it here
   });}
 );
+
+
 
 $(document).ready(function () {
   $("#form_delete").submit(function (event) {

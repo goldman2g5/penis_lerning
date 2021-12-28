@@ -4,7 +4,7 @@
 import pymysql
 from flask import Flask, render_template, request, redirect
 from pymysql.cursors import DictCursor
-
+import datetime
 app = Flask(__name__)
 
 dbh = pymysql.connect(
@@ -74,25 +74,50 @@ def gonki():
 column = None
 table = None
 input_ = None
+values = []
+pre_values = []
+keys = []
+keys_to_add = []
 var = {1, 2}
+
 @app.route('/get_table', methods=['GET', 'POST'])
 def get_name():
     global var
+    global values
+    global pre_values
+    global keys
+    global keys_to_add
+    values = []
+    pre_values = []
+    keys = []
+    keys_to_add = []
     table = request.form['zalupa']
     if table:
         cur = dbh.cursor()
         cur.execute(f"SELECT *FROM {table}")
         var = cur.fetchall()
-
+        for i in var:
+            keys = list(i.keys())
+            keys_to_add = list(i.keys())
+            pre_values = list(i.values())
+            values.append(pre_values)
+        keys_to_add = keys_to_add[1:]
+    # for i in keys_to_add:
+    #     if i == "admin_id" or :
+    #         datatype.appemd('number')
+    #     else:
+    #         datatype.appemd('text')
+    #         #словарь кейс иу адд и дататайп потом выводи одной переменной в последней функции вместо keys_to_add
     return render_template('baza.html')
 
 @app.route('/get_input', methods=['GET', 'POST'])
 def get_input():
     global new_name
 
-    new_name = request.form['name']
-
-
+    new_name = request.form['datas']
+    new_name = new_name.split(",")
+    print(new_name)
+    #сделать фильтр по кейс ту адд и в зависимоти от него присваивать тип данных или сделать валидацию в джес
     update_table = request.form['update_table']
     print(update_table)
     cur = dbh.cursor()
@@ -106,7 +131,7 @@ def get_input():
     new_id = new_id[-1]
     new_id = new_id + 1
 
-    cur.execute(f'INSERT INTO {update_table} VALUES ("{new_id}", "{new_name}");')
+    cur.execute(f'INSERT INTO {update_table} VALUES ("{new_id}", "dfd", "1", "2");')
 
     return render_template('baza.html')
 
@@ -114,6 +139,9 @@ def get_input():
 def delete_user():
     global new_name
     users_to_delete = request.form['users_to_delete']
+    users_to_delete = users_to_delete[1:]
+    users_to_delete = users_to_delete.split(', ')
+    users_to_delete = users_to_delete[0]
     update_table = request.form['update_table']
     cur = dbh.cursor()
     cur.execute(f'SET FOREIGN_KEY_CHECKS = 0;')
@@ -125,7 +153,7 @@ def delete_user():
 @app.route('/gigabaza', methods=['post', 'get'])
 def baza():
 
-    return render_template('baza.html', var=var)
+    return render_template('baza.html', var=var, keys=keys, values=values, keys_to_add=keys_to_add)
 
 
 
