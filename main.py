@@ -7,6 +7,7 @@ import pandas as pd
 import seaborn as sns
 import tensorflow as tf
 from sklearn.metrics import confusion_matrix
+from keras.models import load_model
 
 
 def exists(filePath):
@@ -88,55 +89,55 @@ sample_plot(val_image_array, val_image_label)
 
 sample_plot(test_image_array, test_image_label)
 
-model = tf.keras.models.Sequential([
-    tf.keras.layers.experimental.preprocessing.Rescaling(scale=1. / 255, input_shape=(48, 48, 1)),
-    tf.keras.layers.experimental.preprocessing.RandomContrast(factor=0.2),
-    tf.keras.layers.experimental.preprocessing.RandomFlip(mode='horizontal'),
+if exists("kaggle/model/models.h5") is True:
+    model = load_model("kaggle/model/models.h5")
 
-    tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.Dropout(0.2),
+else:
+    model = tf.keras.models.Sequential([
+        tf.keras.layers.experimental.preprocessing.Rescaling(scale=1. / 255, input_shape=(48, 48, 1)),
+        tf.keras.layers.experimental.preprocessing.RandomContrast(factor=0.2),
+        tf.keras.layers.experimental.preprocessing.RandomFlip(mode='horizontal'),
 
-    tf.keras.layers.Conv2D(16, 5, activation='relu', padding='same'),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dropout(0.2),
 
-    tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.Dropout(0.2),
-    tf.keras.layers.MaxPooling2D(2),
+        tf.keras.layers.Conv2D(16, 5, activation='relu', padding='same'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dropout(0.2),
 
-    tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.MaxPooling2D(2),
 
-    tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dropout(0.2),
 
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dropout(0.4),
+        tf.keras.layers.Conv2D(16, 3, activation='relu', padding='same'),
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.Dropout(0.2),
 
-    tf.keras.layers.Dense(256, activation='relu'),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(len(emotions), activation='softmax'),
-])
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dropout(0.4),
 
-if exists('/weights/') is True:
-    model.load_weights('/weights/model.hdf5')
+        tf.keras.layers.Dense(256, activation='relu'),
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(len(emotions), activation='softmax'),
+    ])
 
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss='categorical_crossentropy',
-              metrics=['accuracy'])
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss='categorical_crossentropy',
+                  metrics=['accuracy'])
 
-earlystop = tf.keras.callbacks.EarlyStopping(patience=10, min_delta=1e-3, restore_best_weights=True)
-lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', patience=3, verbose=1, factor=0.5, min_lr=1e-7)
+    earlystop = tf.keras.callbacks.EarlyStopping(patience=10, min_delta=1e-3, restore_best_weights=True)
+    lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', patience=3, verbose=1, factor=0.5, min_lr=1e-7)
 
-wt = dat[dat[' Usage'] == "Training"].groupby('emotion').agg('count')
+    wt = dat[dat[' Usage'] == "Training"].groupby('emotion').agg('count')
 
-wt['fraction'] = wt[' pixels'] / np.sum(wt[' pixels'])
-class_weights = dict(zip(range(7), wt.fraction))
+    wt['fraction'] = wt[' pixels'] / np.sum(wt[' pixels'])
+    class_weights = dict(zip(range(7), wt.fraction))
 
-if exists('/weights/') is False:
     hist = model.fit(train_images, train_labels,
                      validation_data=(val_images, val_labels),
                      epochs=50,
@@ -145,12 +146,13 @@ if exists('/weights/') is False:
                      callbacks=[earlystop, lr])
     for key in hist.history.keys():
         plt.plot(hist.history[key], label=key)
-    model.save_weights('/weights/model.hdf5')
 
-plt.legend()
+    plt.legend()
 
-model.evaluate(test_images, test_labels)
-test_pred = model.predict(test_images)
-confusion_matrix(y_true=test_image_label, y_pred=np.argmax(test_pred, axis=1))
+    model.evaluate(test_images, test_labels)
+    test_pred = model.predict(test_images)
+    confusion_matrix(y_true=test_image_label, y_pred=np.argmax(test_pred, axis=1))
 
-model.summary()
+    model.summary()
+
+    model.save("kaggle/model/models.h5")

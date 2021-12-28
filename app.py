@@ -5,6 +5,9 @@ import pymysql
 from flask import Flask, render_template, request, redirect
 from pymysql.cursors import DictCursor
 import datetime
+import main
+
+
 app = Flask(__name__)
 
 dbh = pymysql.connect(
