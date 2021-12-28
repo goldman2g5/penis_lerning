@@ -9,7 +9,6 @@ import tensorflow as tf
 from keras.models import load_model
 from sklearn.metrics import confusion_matrix
 
-
 global elite
 global zalupka321
 
@@ -169,7 +168,7 @@ print("Распознан объект: ", zalupka321)
 
 """
 
-                                                                                                    
+                                                   TENSORFLOW                                                 
                                                                                                     
                                           ````.................-------::::-`                        
                          `.-:/+ossyhhddmmmmmmmmmmmmmmdddddddddddddddddddddmmy:                      
