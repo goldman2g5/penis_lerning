@@ -5,6 +5,9 @@ import pymysql
 from flask import Flask, render_template, request, redirect
 from pymysql.cursors import DictCursor
 import datetime
+
+global new_name
+
 app = Flask(__name__)
 
 dbh = pymysql.connect(
@@ -17,6 +20,7 @@ dbh = pymysql.connect(
     autocommit=True
 )
 
+
 @app.route('/', methods=['post', 'get'])
 def main():
     return render_template('glavnaya.html')
@@ -24,7 +28,6 @@ def main():
 
 @app.route('/registration', methods=['post', 'get'])
 def registration():
-
     message = 'Для регистрации заполните форму ниже'
     login, password, username = request.form.get('login'), request.form.get('password'), request.form.get(
         'username')  # запрос к данным формы
@@ -45,7 +48,10 @@ def registration():
 
     return render_template('reg.html', message=message)
 
+
 keys_list = []
+
+
 @app.route('/login', methods=['post', 'get'])
 def login():
     message = 'Для входа введите логин и пароль'
@@ -62,6 +68,7 @@ def login():
             message = "Wrong username or password"
     return render_template('login.html', message=message)
 
+
 @app.route('/neyronka', methods=['post', 'get'])
 def neyronka():
     return render_template('neyronka.html')
@@ -71,6 +78,7 @@ def neyronka():
 def gonki():
     return render_template('gonki.html')
 
+
 column = None
 table = None
 input_ = None
@@ -79,6 +87,7 @@ pre_values = []
 keys = []
 keys_to_add = []
 var = {1, 2}
+
 
 @app.route('/get_table', methods=['GET', 'POST'])
 def get_name():
@@ -110,6 +119,7 @@ def get_name():
     #         #словарь кейс иу адд и дататайп потом выводи одной переменной в последней функции вместо keys_to_add
     return render_template('baza.html')
 
+
 @app.route('/get_input', methods=['GET', 'POST'])
 def get_input():
     global new_name
@@ -117,7 +127,7 @@ def get_input():
     new_name = request.form['datas']
     new_name = new_name.split(",")
     print(new_name)
-    #сделать фильтр по кейс ту адд и в зависимоти от него присваивать тип данных или сделать валидацию в джес
+    # сделать фильтр по кейс ту адд и в зависимоти от него присваивать тип данных или сделать валидацию в джес
     update_table = request.form['update_table']
     print(update_table)
     cur = dbh.cursor()
@@ -135,9 +145,9 @@ def get_input():
 
     return render_template('baza.html')
 
+
 @app.route('/delete_user', methods=['GET', 'POST'])
 def delete_user():
-    global new_name
     users_to_delete = request.form['users_to_delete']
     users_to_delete = users_to_delete[1:]
     users_to_delete = users_to_delete.split(', ')
@@ -150,12 +160,10 @@ def delete_user():
 
     return render_template('baza.html')
 
+
 @app.route('/gigabaza', methods=['post', 'get'])
 def baza():
-
     return render_template('baza.html', var=var, keys=keys, values=values, keys_to_add=keys_to_add)
-
-
 
 
 if __name__ == "__main__":

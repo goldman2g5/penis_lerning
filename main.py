@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import image
 import seaborn as sns
 import random
 
@@ -38,9 +39,9 @@ def prepare_data(data):
     image_label = np.array(list(map(int, data['emotion'])))
 
     for i, row in enumerate(data.index):
-        image = np.fromstring(data.loc[row, ' pixels'], dtype=int, sep=' ')
-        image = np.reshape(image, (48, 48))
-        image_array[i] = image
+        img = np.fromstring(data.loc[row, ' pixels'], dtype=int, sep=' ')
+        img = np.reshape(img, (48, 48))
+        image_array[i] = img
 
     return image_array, image_label
 
@@ -76,7 +77,6 @@ val_labels = tf.keras.utils.to_categorical(val_image_label)
 test_labels = tf.keras.utils.to_categorical(test_image_label)
 
 sample_plot(val_image_array, val_image_label)
-
 
 sample_plot(test_image_array, test_image_label)
 
@@ -114,19 +114,16 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dense(len(emotions), activation='softmax'),
 ])
 
-
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 earlystop = tf.keras.callbacks.EarlyStopping(patience=10, min_delta=1e-3, restore_best_weights=True)
 lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', patience=3, verbose=1, factor=0.5, min_lr=1e-7)
 
-
 wt = dat[dat[' Usage'] == "Training"].groupby('emotion').agg('count')
 
 wt['fraction'] = wt[' pixels'] / np.sum(wt[' pixels'])
 class_weights = dict(zip(range(7), wt.fraction))
-
 
 hist = model.fit(train_images, train_labels,
                  validation_data=(val_images, val_labels),
@@ -144,3 +141,5 @@ test_pred = model.predict(test_images)
 confusion_matrix(y_true=test_image_label, y_pred=np.argmax(test_pred, axis=1))
 
 model.summary()
+
+imgage = image.imread("fav.jpg")
