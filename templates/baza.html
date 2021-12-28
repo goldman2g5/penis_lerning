@@ -16,17 +16,15 @@
 
     <form action="" class="pt-5" method="post" id="form">
       <div class="form-group table">
-          <label class="form-check-label pt-1" for="admins">Выберите базу данных</label>
+          <label class="form-check-label pt-1" for="admins">Выберите таблицу</label>
             <select class="form-select" aria-label="table" id="zalupa">
-                <option name="admins" value="admins" selected="selected">admins</option>
-                <option name="room" value="room">room</option>
-                <option name="console" value="console">console</option>
-                <option name="rent_room" value="room_rent">room_rent</option>
-                <option name="quests" value="guests">guests</option>
+                {% for i in tables %}
+                <option name="{{ i }}" value="{{ i }}" selected="selected">{{ i }}</option>
+                {% endfor %}
             </select>
 
       </div>
-     <button type="submit" class="btn btn-primary btn-lg  w-100">Выбрать базу</button>
+     <button type="submit" class="btn btn-primary btn-lg  w-100">Выбрать таблицу</button>
     </form>
     </div>
         <div class="col-6">
@@ -61,12 +59,12 @@
   <form action="" class="pt-5" method="post" id="form_input">
           <div class="form-group table">
 
-              <label for="input_db">Добавить пользователя</label>
+              <label for="input_db">Добавить в таблицу</label>
               {% for i in keys_to_add %}
           <input name="{{ i.name }}" class="form-control mb-2" id="{{ i.name }}" placeholder="{{ i.name }}" type="{{i.datatype}}" required>
              {% endfor %}
           </div>
-         <button type="submit" class="btn btn-primary btn-lg  w-100">Добавить пользователя</button>
+         <button type="submit" class="btn btn-primary btn-lg  w-100">Добавить в таблицу</button>
         </form>
     </div>
 
@@ -82,7 +80,7 @@
                   {% endfor %}
             </select>
           </div>
-         <button type="submit" class="btn btn-primary btn-lg  w-100">Удалить пользователя</button>
+         <button type="submit" class="btn btn-primary btn-lg  w-100">Удалить из таблицы</button>
         </form>
 
     </div>
