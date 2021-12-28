@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import tensorflow as tf
-from sklearn.metrics import confusion_matrix
 from keras.models import load_model
+from sklearn.metrics import confusion_matrix
 
 
 def exists(filePath):
@@ -156,3 +156,16 @@ else:
     model.summary()
 
     model.save("kaggle/model/models.h5")
+
+prediction = model.predict(train_images)
+
+n = 1122
+
+
+print("Выход сети:")
+print(prediction[n])
+print()
+for i in range(10):
+    print(i, "->", "{:.40f}".format(prediction[n][i]))
+print()
+print("Распознан объект: ", np.argmax(prediction[n]), "-", labels[np.argmax(prediction[n])])
