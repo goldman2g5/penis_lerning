@@ -1,13 +1,12 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import image
-import seaborn as sns
-import random
 import os
+import random
 
-from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 import tensorflow as tf
+from sklearn.metrics import confusion_matrix
 
 
 def exists(filePath):
@@ -21,8 +20,7 @@ def exists(filePath):
 tf.random.set_seed(0)
 var = tf.keras.backend.clear_session
 
-path = '/kaggle/'
-tdat = pd.read_csv(path + 'icml_face_data.csv')
+tdat = pd.read_csv('kaggle/icml_face_data.csv')
 tdat.sample(5)
 
 emotions = {0: 'Angry', 1: 'Disgust', 2: 'Fear', 3: 'Happy', 4: 'Sad', 5: 'Surprise', 6: 'Neutral'}

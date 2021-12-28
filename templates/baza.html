@@ -24,7 +24,7 @@
             </select>
 
       </div>
-     <button type="submit" class="btn btn-primary btn-lg  w-100">Выбрать базу</button>
+     <button type="submit" class="btn btn-primary btn-lg  w-100">Выбрать таблицу</button>
     </form>
     </div>
         <div class="col-6">
@@ -59,12 +59,12 @@
   <form action="" class="pt-5" method="post" id="form_input">
           <div class="form-group table">
 
-              <label for="input_db">Добавить пользователя</label>
+              <label for="input_db">Добавить в таблицу</label>
               {% for i in keys_to_add %}
           <input name="{{ i.name }}" class="form-control mb-2" id="{{ i.name }}" placeholder="{{ i }}" required>
              {% endfor %}
           </div>
-         <button type="submit" class="btn btn-primary btn-lg  w-100">Добавить пользователя</button>
+         <button type="submit" class="btn btn-primary btn-lg  w-100">Добавить в таблицу</button>
         </form>
     </div>
 
@@ -80,7 +80,7 @@
                   {% endfor %}
             </select>
           </div>
-         <button type="submit" class="btn btn-primary btn-lg  w-100">Удалить пользователя</button>
+         <button type="submit" class="btn btn-primary btn-lg  w-100">Удалить из таблицы</button>
         </form>
 
     </div>
