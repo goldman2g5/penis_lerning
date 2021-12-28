@@ -1,11 +1,22 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import image
 import seaborn as sns
 import random
+import os
 
 from sklearn.metrics import confusion_matrix
 import tensorflow as tf
+
+
+def exists(filePath):
+    try:
+        os.stat(filePath)
+    except OSError:
+        return False
+    return True
+
 
 tf.random.set_seed(0)
 var = tf.keras.backend.clear_session
@@ -38,9 +49,9 @@ def prepare_data(data):
     image_label = np.array(list(map(int, data['emotion'])))
 
     for i, row in enumerate(data.index):
-        image = np.fromstring(data.loc[row, ' pixels'], dtype=int, sep=' ')
-        image = np.reshape(image, (48, 48))
-        image_array[i] = image
+        img = np.fromstring(data.loc[row, ' pixels'], dtype=int, sep=' ')
+        img = np.reshape(img, (48, 48))
+        image_array[i] = img
 
     return image_array, image_label
 
@@ -76,7 +87,6 @@ val_labels = tf.keras.utils.to_categorical(val_image_label)
 test_labels = tf.keras.utils.to_categorical(test_image_label)
 
 sample_plot(val_image_array, val_image_label)
-
 
 sample_plot(test_image_array, test_image_label)
 
@@ -114,6 +124,8 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dense(len(emotions), activation='softmax'),
 ])
 
+if exists('/weights/') is True:
+    model.load_weights('/weights/model.hdf5')
 
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss='categorical_crossentropy',
               metrics=['accuracy'])
@@ -121,22 +133,22 @@ model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3), loss='cate
 earlystop = tf.keras.callbacks.EarlyStopping(patience=10, min_delta=1e-3, restore_best_weights=True)
 lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', patience=3, verbose=1, factor=0.5, min_lr=1e-7)
 
-
 wt = dat[dat[' Usage'] == "Training"].groupby('emotion').agg('count')
 
 wt['fraction'] = wt[' pixels'] / np.sum(wt[' pixels'])
 class_weights = dict(zip(range(7), wt.fraction))
 
+if exists('/weights/') is False:
+    hist = model.fit(train_images, train_labels,
+                     validation_data=(val_images, val_labels),
+                     epochs=50,
+                     class_weight=class_weights,
+                     batch_size=128,
+                     callbacks=[earlystop, lr])
+    for key in hist.history.keys():
+        plt.plot(hist.history[key], label=key)
+    model.save_weights('/weights/model.hdf5')
 
-hist = model.fit(train_images, train_labels,
-                 validation_data=(val_images, val_labels),
-                 epochs=50,
-                 class_weight=class_weights,
-                 batch_size=128,
-                 callbacks=[earlystop, lr])
-
-for key in hist.history.keys():
-    plt.plot(hist.history[key], label=key)
 plt.legend()
 
 model.evaluate(test_images, test_labels)

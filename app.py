@@ -21,6 +21,8 @@ dbh = pymysql.connect(
 column = None
 table = None
 input_ = None
+login = None
+password = None
 tables_for_insert = []
 values = []
 pre_values = []
@@ -34,20 +36,28 @@ def main():
 
 @app.route('/registration', methods=['post', 'get'])
 def registration():
-
+    dbh = pymysql.connect(
+        host='185.12.94.106',
+        user='2p2s10',
+        password='231-429-617',
+        db='2p2s10',
+        charset='utf8mb4',
+        cursorclass=DictCursor,
+        autocommit=True
+    )
     message = 'Для регистрации заполните форму ниже'
-    login, password, username = request.form.get('login'), request.form.get('password'), request.form.get(
-        'username')  # запрос к данным формы
+    login, password = request.form.get('login'), request.form.get('password')  # запрос к данным формы
 
-    if login and password and username and len(login) >= 4 and len(password) >= 4 and len(username) >= 4:
+    if login and password:
+        print(login, password)
         cur = dbh.cursor()
         cur.execute(
-            f'(SELECT login, password, name FROM users WHERE login = "{login}" OR password = "{password}" OR name = "{username}";')
+            f"SELECT login, password FROM users WHERE login = '{login}' OR password = '{password}';")
         huy = cur.fetchone()
 
         if huy is None:
             cur.execute(
-                f'INSERT INTO users (id, login, password, name) VALUES (NULL, "{login}", "{password}", "{username}");')
+                f"INSERT INTO users (login, password) VALUES ('{login}', '{password}');")
             return redirect("/login")
 
         else:
@@ -58,6 +68,16 @@ def registration():
 keys_list = []
 @app.route('/login', methods=['post', 'get'])
 def login():
+    global dbh
+    dbh = pymysql.connect(
+        host='185.12.94.106',
+        user='2p2s10',
+        password='231-429-617',
+        db='2p2s10',
+        charset='utf8mb4',
+        cursorclass=DictCursor,
+        autocommit=True
+    )
     message = 'Для входа введите логин и пароль'
     login, password = request.form.get('username'), request.form.get('password')  # запрос к данным формы
 
@@ -65,9 +85,19 @@ def login():
         cur = dbh.cursor()
         cur.execute(f'SELECT login, password FROM users WHERE login = "{login}" AND password = "{password}";')
         a = cur.fetchone()
+        print(a)
 
         if a and a['login'] == login and a['password'] == password:
-            return redirect("/neyronka")
+            dbh = pymysql.connect(
+                host='185.12.94.106',
+                user=a['login'],
+                password=a['password'],
+                db=a['login'],
+                charset='utf8mb4',
+                cursorclass=DictCursor,
+                autocommit=True
+            )
+            return redirect("/gigabaza")
         else:
             message = "Wrong username or password"
     return render_template('login.html', message=message)
