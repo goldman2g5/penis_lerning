@@ -17,10 +17,19 @@ dbh = pymysql.connect(
     autocommit=True
 )
 
+column = None
+table = None
+input_ = None
+tables_for_insert = []
+values = []
+pre_values = []
+keys = []
+keys_to_add = []
+var = {1, 2}
+
 @app.route('/', methods=['post', 'get'])
 def main():
     return render_template('glavnaya.html')
-
 
 @app.route('/registration', methods=['post', 'get'])
 def registration():
@@ -71,15 +80,6 @@ def neyronka():
 def gonki():
     return render_template('gonki.html')
 
-column = None
-table = None
-input_ = None
-values = []
-pre_values = []
-keys = []
-keys_to_add = []
-var = {1, 2}
-
 @app.route('/get_table', methods=['GET', 'POST'])
 def get_name():
     global var
@@ -87,6 +87,7 @@ def get_name():
     global pre_values
     global keys
     global keys_to_add
+    global tables_for_insert
     values = []
     pre_values = []
     keys = []
@@ -101,13 +102,14 @@ def get_name():
             keys_to_add = list(i.keys())
             pre_values = list(i.values())
             values.append(pre_values)
+        tables_for_insert = keys_to_add
         keys_to_add = keys_to_add[1:]
     # for i in keys_to_add:
     #     if i == "admin_id" or :
     #         datatype.appemd('number')
     #     else:
     #         datatype.appemd('text')
-    #         #словарь кейс иу адд и дататайп потом выводи одной переменной в последней функции вместо keys_to_add
+    #         #словарь кейс иу адд и дататайп потом вывод одной переменной в последней функции вместо keys_to_add
     return render_template('baza.html')
 
 @app.route('/get_input', methods=['GET', 'POST'])
@@ -116,7 +118,9 @@ def get_input():
 
     new_name = request.form['datas']
     new_name = new_name.split(",")
-    print(new_name)
+
+    keys_to_add = ', '.join(["'" + str(elem) + "'" for elem in new_name])
+    print(keys_to_add)
     #сделать фильтр по кейс ту адд и в зависимоти от него присваивать тип данных или сделать валидацию в джес
     update_table = request.form['update_table']
     print(update_table)
@@ -131,7 +135,7 @@ def get_input():
     new_id = new_id[-1]
     new_id = new_id + 1
 
-    cur.execute(f'INSERT INTO {update_table} VALUES ("{new_id}", "dfd", "1", "2");')
+    cur.execute(f'INSERT INTO {update_table} VALUES ("{new_id}", {keys_to_add});')
 
     return render_template('baza.html')
 
