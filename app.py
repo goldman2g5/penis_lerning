@@ -1,13 +1,18 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+import random
+
+import matplotlib.pyplot as plt
+import numpy as np
 import pymysql
+import tensorflow as tf
+from PIL import Image
 from flask import Flask, render_template, request, redirect, flash
+from keras.models import load_model
 from pymysql.cursors import DictCursor
 from werkzeug.utils import secure_filename
-import datetime
-import os
-from main import zalupka321
 
 app = Flask(__name__)
 
@@ -27,6 +32,8 @@ input_ = None
 login = None
 password = None
 new_img = None
+zalupka321 = None
+filename = ""
 tables_for_insert = []
 values = []
 pre_values = []
@@ -214,6 +221,8 @@ print(UPLOAD_FOLDER)
 @app.route('/penis_learning', methods=['post', 'get'])
 def neyronka():
     global new_img
+    global zalupka321
+    global filename
 
     def allowed_file(filename):
         return '.' in filename and \
@@ -236,7 +245,53 @@ def neyronka():
             new_img = UPLOAD_FOLDER + "/" + filename
             print(new_img)
 
-    return render_template('neyronka.html', zalupka321=zalupka321)
+        def exists(filePath):
+            try:
+                os.stat(filePath)
+            except OSError:
+                return False
+            return True
+
+        tf.random.set_seed(0)
+        var = tf.keras.backend.clear_session
+
+        emotions = {0: 'Angry', 1: 'Disgust', 2: 'Fear', 3: 'Happy', 4: 'Sad', 5: 'Surprise', 6: 'Neutral'}
+
+        def prepare_data(data):
+            image_array = np.zeros(shape=(len(data), 48, 48))
+            image_label = np.array(list(map(int, data['emotion'])))
+
+            for i, row in enumerate(data.index):
+                img = np.fromstring(data.loc[row, ' pixels'], dtype=int, sep=' ')
+                img = np.reshape(img, (48, 48))
+                image_array[i] = img
+
+            return image_array, image_label
+
+        def sample_plot(x, y=None):
+            # x, y are numpy arrays
+            n = 20
+            samples = random.sample(range(x.shape[0]), n)
+
+            figs, axs = plt.subplots(2, 10, figsize=(25, 5), sharex=True, sharey=True)
+            ax = axs.ravel()
+            for i in range(n):
+                ax[i].imshow(x[samples[i], :, :], cmap=plt.get_cmap('gray'))
+                ax[i].set_xticks([])
+                ax[i].set_yticks([])
+                if y is not None:
+                    ax[i].set_title(emotions[y[samples[i]]])
+
+        model = load_model("kaggle/model/models.h5")
+
+        imgPath = new_img
+        img = Image.open(imgPath).convert('L').resize((48, 48), Image.ANTIALIAS)
+        img = np.array(img)
+
+        prediction = model.predict(img[None, :, :])
+        zalupka321 = "".join(list(emotions[np.argmax(prediction)]))
+        print("Распознан объект: ", zalupka321)
+    return render_template('neyronka.html', zalupka321=zalupka321, new_img=UPLOAD_FOLDER + "\\" + filename)
 
 
 if __name__ == "__main__":
