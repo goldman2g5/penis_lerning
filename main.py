@@ -27,8 +27,9 @@ var = tf.keras.backend.clear_session
 
 emotions = {0: 'Angry', 1: 'Disgust', 2: 'Fear', 3: 'Happy', 4: 'Sad', 5: 'Surprise', 6: 'Neutral'}
 
-
 """
+!!!!!Раскоментить для обучения!!!!!
+
 tdat = pd.read_csv('kaggle/icml_face_data.csv')
 tdat.sample(5)
 
@@ -49,6 +50,8 @@ sns.countplot(data=dat[dat[' Usage'] == 'PrivateTest'], x='emotion', ax=ax3).set
 ax3.set_xticklabels(emotions.values())
 
 """
+
+
 def prepare_data(data):
     image_array = np.zeros(shape=(len(data), 48, 48))
     image_label = np.array(list(map(int, data['emotion'])))
@@ -75,7 +78,9 @@ def sample_plot(x, y=None):
         if y is not None:
             ax[i].set_title(emotions[y[samples[i]]])
 
+
 """
+!!!!!Раскоментить для обучения!!!!!
 
 train_image_array, train_image_label = prepare_data(dat[dat[' Usage'] == 'Training'])
 val_image_array, val_image_label = prepare_data(dat[dat[' Usage'] == 'PrivateTest'])
@@ -98,9 +103,11 @@ sample_plot(test_image_array, test_image_label)
 
 """
 
-
 if exists("kaggle/model/models.h5") is True:
     model = load_model("kaggle/model/models.h5")
+
+"""
+!!!!!Раскоментить для обучения!!!!!
 
 else:
     model = tf.keras.models.Sequential([
@@ -166,16 +173,16 @@ else:
     model.summary()
 
     model.save("kaggle/model/models.h5")
+    
+"""
 
-imgPath = "pics/0_0.jpg"
+imgPath = "pics/ebalo."
 img = Image.open(imgPath).convert('L').resize((48, 48), Image.ANTIALIAS)
 img = np.array(img)
-
 
 prediction = model.predict(img[None, :, :])
 zalupka321 = "".join(list(emotions[np.argmax(prediction)]))
 print("Распознан объект: ", zalupka321)
-
 
 """
 
