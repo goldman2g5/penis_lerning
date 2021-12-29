@@ -29,7 +29,7 @@ dbh = pymysql.connect(
 column = None
 table = None
 input_ = None
-login = None
+login = ""
 password = None
 new_img = None
 zalupka321 = None
@@ -85,6 +85,7 @@ keys_list = []
 @app.route('/login', methods=['post', 'get'])
 def login():
     global dbh
+    global login
     dbh = pymysql.connect(
         host='185.12.94.106',
         user='2p2s10',
@@ -101,6 +102,7 @@ def login():
         cur = dbh.cursor()
         cur.execute(f'SELECT login, password FROM users WHERE login = "{login}" AND password = "{password}";')
         a = cur.fetchone()
+        login = a['login']
         print(a)
 
         if a and a['login'] == login and a['password'] == password:
@@ -207,8 +209,11 @@ def baza():
     cur.execute("SHOW TABLES")
     tables = []
     for i in cur:
-        tables.append(i.get(f"Tables_in_2p2s10"))
-    print(tables)
+      # tables.append(i.get(f"Tables_in_2p2s10"))
+        print(login)
+        print(i)
+        tables.append(i.get(f"Tables_in_{login}"))
+
     return render_template('baza.html', var=var, keys=keys, values=values, keys_to_add=keys_to_add, tables=tables)
 
 
@@ -296,6 +301,7 @@ def neyronka():
 
 if __name__ == "__main__":
     app.run(debug=True)
+# app.run(debug = True, host='db-learning.ithub.ru', port=1110)
 
 # cur.execute(f"SELECT admins.id, admins.name, room.id, room.room_name FROM admins, room, room_rent, console, guests")
 # room.console_id, room.admin_id, room_rent.id, room_rent.rent_time, room_rent.guest_id, room_rent.room_id
