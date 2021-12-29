@@ -11,6 +11,8 @@ from keras.models import load_model
 from app import new_img
 from sklearn.metrics import confusion_matrix
 
+from app import new_img
+
 global imgPath
 global zalupka321
 
