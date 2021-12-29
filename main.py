@@ -3,15 +3,9 @@ import random
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import seaborn as sns
 import tensorflow as tf
 from PIL import Image
 from keras.models import load_model
-from app import new_img
-from sklearn.metrics import confusion_matrix
-
-from app import new_img
 
 global imgPath
 global zalupka321
@@ -60,9 +54,9 @@ def prepare_data(data):
     image_label = np.array(list(map(int, data['emotion'])))
 
     for i, row in enumerate(data.index):
-        img = np.fromstring(data.loc[row, ' pixels'], dtype=int, sep=' ')
-        img = np.reshape(img, (48, 48))
-        image_array[i] = img
+        pic = np.fromstring(data.loc[row, ' pixels'], dtype=int, sep=' ')
+        pic = np.reshape(pic, (48, 48))
+        image_array[i] = pic
 
     return image_array, image_label
 
@@ -106,7 +100,7 @@ sample_plot(test_image_array, test_image_label)
 
 """
 
-if exists("kaggle/model/models.h5") is True:
+if exists("kaggle/model/models.h5"):
     model = load_model("kaggle/model/models.h5")
 
 """

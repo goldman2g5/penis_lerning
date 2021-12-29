@@ -1,24 +1,18 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pymysql
-from flask import Flask, render_template, request, redirect, flash
-from pymysql.cursors import DictCursor
-from werkzeug.utils import secure_filename
-import datetime
-import os
 import os
 import random
+
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import seaborn as sns
+import pymysql
 import tensorflow as tf
 from PIL import Image
+from flask import Flask, render_template, request, redirect, flash
 from keras.models import load_model
-from app import new_img
-from sklearn.metrics import confusion_matrix
-
+from pymysql.cursors import DictCursor
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -38,6 +32,7 @@ input_ = None
 login = None
 password = None
 new_img = None
+zalupka321 = None
 tables_for_insert = []
 values = []
 pre_values = []
@@ -224,7 +219,8 @@ print(UPLOAD_FOLDER)
 
 @app.route('/penis_learning', methods=['post', 'get'])
 def neyronka():
-    global new_img, zalupka321
+    global new_img
+    global zalupka321
 
     def allowed_file(filename):
         return '.' in filename and \
