@@ -176,7 +176,7 @@ else:
     
 """
 
-imgPath = "pics/ebalo."
+
 img = Image.open(imgPath).convert('L').resize((48, 48), Image.ANTIALIAS)
 img = np.array(img)
 
