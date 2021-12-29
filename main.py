@@ -10,6 +10,8 @@ from PIL import Image
 from keras.models import load_model
 from sklearn.metrics import confusion_matrix
 
+from app import new
+
 global imgPath
 global zalupka321
 
@@ -176,7 +178,7 @@ else:
     
 """
 
-
+imgPath = new_img
 img = Image.open(imgPath).convert('L').resize((48, 48), Image.ANTIALIAS)
 img = np.array(img)
 
