@@ -164,13 +164,14 @@ else:
 imgPath = "pics/0_0.jpg"
 img = Image.open(imgPath).convert('L').resize((48, 48), Image.ANTIALIAS)
 img = np.array(img)
-model.predict(img[None, :, :])
 
-prediction = model.predict(train_images)
+"""prediction = model.predict(train_images)
 n = 1122
-zalupka321 = "".join(list(emotions[np.argmax(prediction[n])]))
-
+"""
+prediction = model.predict(img[None, :, :])
+zalupka321 = "".join(list(emotions[np.argmax(prediction)]))
 print("Распознан объект: ", zalupka321)
+
 
 """
 
