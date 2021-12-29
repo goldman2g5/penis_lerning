@@ -7,6 +7,7 @@ from pymysql.cursors import DictCursor
 from werkzeug.utils import secure_filename
 import datetime
 import os
+from main import zalupka321
 
 app = Flask(__name__)
 
@@ -25,6 +26,7 @@ table = None
 input_ = None
 login = None
 password = None
+new_img = None
 tables_for_insert = []
 values = []
 pre_values = []
@@ -203,7 +205,7 @@ def baza():
     return render_template('baza.html', var=var, keys=keys, values=values, keys_to_add=keys_to_add, tables=tables)
 
 
-UPLOAD_FOLDER = f'{os.path.abspath(os.getcwd())}/uploads'
+UPLOAD_FOLDER = f'{os.path.abspath(os.getcwd())}'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 print(UPLOAD_FOLDER)
@@ -211,6 +213,8 @@ print(UPLOAD_FOLDER)
 
 @app.route('/penis_learning', methods=['post', 'get'])
 def neyronka():
+    global new_img
+
     def allowed_file(filename):
         return '.' in filename and \
                filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -229,7 +233,10 @@ def neyronka():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    return render_template('neyronka.html')
+            new_img = UPLOAD_FOLDER + "/" + filename
+            print(new_img)
+
+    return render_template('neyronka.html', zalupka321=zalupka321)
 
 
 if __name__ == "__main__":

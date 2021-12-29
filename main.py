@@ -8,6 +8,7 @@ import seaborn as sns
 import tensorflow as tf
 from PIL import Image
 from keras.models import load_model
+from app import new_img
 from sklearn.metrics import confusion_matrix
 
 global imgPath
@@ -176,7 +177,7 @@ else:
     
 """
 
-imgPath = "pics/ebalo."
+imgPath = new_img
 img = Image.open(imgPath).convert('L').resize((48, 48), Image.ANTIALIAS)
 img = np.array(img)
 

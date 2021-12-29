@@ -12,15 +12,15 @@
 
 </div>
 <h1>Нажмите на кнопку чтобы получить вашу эмоцию<</h1>
+    <h1>Upload new File</h1>
     <form method=post enctype=multipart/form-data>
-        <label for="formFileLg" class="form-label"></label>
-        <input class="form-control form-control-lg" id="formFileLg" type="file" name="file">
+      <input type=file name=file>
+      <input type=submit value=Upload>
     </form>
-<button type="submit" value="Upload btn btn-primary btn-lg  w-100">Получить эмоцию</button>
 
 <figure class="figure">
     <img src="..." class="figure-img img-fluid rounded" alt="Сопроводительная надпись для изображения.">
-    <figcaption class="figure-caption text-right">Ваша эмоция .</figcaption>
+    <figcaption class="figure-caption text-right">{{ zalupka321 }}</figcaption>
 </figure>
 <canvas id="canvas"></canvas>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js'></script>
