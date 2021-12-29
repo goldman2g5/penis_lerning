@@ -299,9 +299,11 @@ def neyronka():
     return render_template('neyronka.html', zalupka321=zalupka321, new_img=UPLOAD_FOLDER + "\\" + filename)
 
 
+"""
 if __name__ == "__main__":
-    app.run(debug=True)
-# app.run(debug = True, host='db-learning.ithub.ru', port=1110)
+    app.run(debug=True) 
+"""
+app.run(debug=True, host='db-learning.ithub.ru', port=1974)
 
 # cur.execute(f"SELECT admins.id, admins.name, room.id, room.room_name FROM admins, room, room_rent, console, guests")
 # room.console_id, room.admin_id, room_rent.id, room_rent.rent_time, room_rent.guest_id, room_rent.room_id
